@@ -142,7 +142,15 @@ before layers configuration."
 layers configuration."
   (global-linum-mode) ; Show line numbers by default
   (setq powerline-default-separator 'arrow)
-)
+
+  (custom-set-faces
+   '(font-lock-comment-face ((t (:italic t))))
+   '(fringe ((t (:background "#1c1f26"))))
+   '(linum ((t (:foreground "#535C6F" :background "#1c1f26"))))
+   )
+
+  (setq linum-format "%d ")
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
