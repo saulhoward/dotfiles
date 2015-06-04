@@ -9,16 +9,11 @@ urxvtd -q -f -o &
 # compositing manager
 compton -b --config ~/.config/compton.conf &
 
-# wallpaper
-#nitrogen --restore &
-
 # clipboard manager
-#(sleep 3s && clipit) &
-
-# disable system beep
-#xset b off &
-
-#mpd &
+(sleep 3s && clipit) &
 
 # notifications
 dunst &
+
+# disable touchpad while typing
+syndaemon -d -t -k -i 2 &

@@ -139,7 +139,7 @@ for_window [window_role="pop-up"] floating enable,move absolute center
 # Move to workspace
 #assign [instance="terminator|urxvt"] $WS1
 assign [instance="Navigator|Dialog"] $WS2
-assign [class="Chromium|jetbrains-android-studio|Firefox|qutebrowser"] $WS2
+#assign [class="Chromium|jetbrains-android-studio|Firefox|qutebrowser"] $WS2
 assign [class="sublime-text|Code"] $WS3
 assign [instance="mousepad|leafpad|geany"] $WS3
 assign [instance="shotwell|simple-scan|brasero|devede|imagination|picard|wxcam|google-musicmanager|goobox"] $WS4
@@ -239,7 +239,8 @@ set $green #B6E354
 bar {
 	position top
         status_command i3status -c ~/.i3/i3status.conf
-        tray_output primary
+        #tray_output primary
+        #tray_output none
         #output DP1
         #output LVDS1
         #output VGA1
