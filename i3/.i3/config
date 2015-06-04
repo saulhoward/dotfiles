@@ -249,7 +249,7 @@ bar {
             separator #252525
 
             # Colors           border  backgr. text
-            focused_workspace  #141414 #CCCCCC #333333
+            focused_workspace  #141414 $purple #333333
             active_workspace   #141414 #181b20 #746C48
             inactive_workspace #141414 #181b20 #444444
             urgent_workspace   #141414 #181b20 #8c644c
@@ -258,10 +258,10 @@ bar {
 
 
 # Window colors         border  backgr. text    indicator
-client.focused          $purple $purple #888888 $purple
-client.focused_inactive $mid_grey $mid_grey #888888 $mid_grey
-client.unfocused	$mid_grey $mid_grey #888888 $mid_grey
-client.urgent           $light_red $light_red #888888 $light_red
+client.focused          $purple $purple #333333 $purple
+client.focused_inactive $dark_grey $dark_grey $mid_grey $dark_grey
+client.unfocused	$dark_grey $dark_grey $mid_grey $dark_grey
+client.urgent           $light_red $light_red $light_grey $light_red
 
 # autostart
 exec --no-startup-id feh --bg-scale ~/Downloads/desertsunset.png
