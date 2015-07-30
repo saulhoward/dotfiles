@@ -17,7 +17,7 @@ Plug 'bling/vim-airline'
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/unite-outline'
 Plug 'Shougo/vimfiler.vim'
-Plug 'tokuhirom/unite-converter-buffer-simple'
+Plug 'Shougo/neomru.vim'
 
 " code
 Plug 'fatih/vim-go'
@@ -30,6 +30,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
 
 " misc
+Plug 'ervandew/supertab'
 Plug 'vimwiki'
 Plug 'fountain.vim'
 Plug 'ledger/vim-ledger'
@@ -55,8 +56,7 @@ let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 " remove unused modes
 let g:airline_theme="dark"
-" let g:airline_detect_whitespace=0
-
+let g:airline#extensions#whitespace#enabled = 0
 " tabline at top
 let g:airline#extensions#tabline#enabled = 1
 
@@ -80,6 +80,11 @@ elseif executable('ack')
   let g:unite_source_grep_recursive_opt = ''
 endif
 
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#custom_source('buffer,buffer_tab', 'filters',
+            \ ['converters', 'converter_buffer_simple'])
+au BufReadPost *.md call unite#sources#outline#alias('vimwiki', 'markdown')
+
 nnoremap <leader>t :Unite -no-split -buffer-name=files   -start-insert file_rec/async:!<cr>
 nnoremap <leader>f :Unite -no-split -buffer-name=files   -start-insert file<cr>
 nnoremap <leader>r :Unite -no-split -buffer-name=mru     -start-insert file_mru<cr>
@@ -93,9 +98,12 @@ autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()
   " Play nice with supertab
   let b:SuperTabDisabled=1
+
   " Enable navigation with control-j and control-k in insert mode
   imap <buffer> <C-j>   <Plug>(unite_select_next_line)
   imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+
+  nmap <buffer> <ESC> <Plug>(unite_exit)
 endfunction
 
 "vimfiler
@@ -116,7 +124,7 @@ nnoremap <silent> <leader>d :<C-u>VimFiler -quit -buffer-name=explorer<CR>
 nmap <F3> :silent %w !xclip -selection clipboard<CR>
 
 " vimwiki
-let g:vimwiki_list = [{'path': '~/Dropbox/wiki/',
+let g:vimwiki_list = [{'path': '~/sync/wiki/',
                      \ 'syntax': 'markdown', 'ext': '.md'}]
 
 " Colors **********************************************************************
@@ -154,8 +162,5 @@ if &term =~ 'rxvt'
   set t_ut=
 endif
 
-"unite settings
-"call unite#filters#matcher_default#use(['matcher_fuzzy'])
-"call unite#custom_source('buffer,buffer_tab', 'filters',
-            "\ ['converters', 'converter_buffer_simple'])
-"au BufReadPost *.md call unite#sources#outline#alias('vimwiki', 'markdown')
+" SuperTab
+"let g:SuperTabDefaultCompletionType = "<c-n>"

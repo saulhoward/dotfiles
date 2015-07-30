@@ -16,4 +16,4 @@ compton -b --config ~/.config/compton.conf &
 dunst &
 
 # disable touchpad while typing
-syndaemon -d -t -k -i 2 &
+syndaemon -d -k -t -i 2 &

@@ -49,6 +49,8 @@ urxvt*boldFont: xft:Ubuntu Mono:bold:pixelsize=24:autohint=true
 urxvt*italicFont: xft:Ubuntu Mono:italic:pixelsize=24:autohint=true
 urxvt*bolditalicFont: xft:Ubuntu Mono:bold:italic:pixelsize=24:autohint=true
 
+URxvt.letterSpace: -1
+
 ! -- URXVT specifics -- !
 
 ! IBus https://wiki.archlinux.org/index.php/IBus#rxvt-unicode
@@ -81,10 +83,18 @@ urxvt*background:       rgba:0000/0000/0000/eeee
 urxvt*depth:             32
 
 URxvt.underlineURLs:   true
-URxvt.perl-ext-common: default,matcher
+URxvt.perl-ext-common: default,matcher,font-size
 URxvt.url-launcher:    /usr/bin/chromium
 URxvt.matcher.button:  1
 ! URxvt.colorUL:         #86a2be
+
+! font-size perl extension
+URxvt.iso14755: false
+URxvt.iso14755_52: false
+URxvt.font-size.step: 4
+URxvt.keysym.C-S-Up:   perl:font-size:increase
+URxvt.keysym.C-S-Down: perl:font-size:decrease
+URxvt.keysym.C-0:    perl:font-size:reset
 
 ! man pages
 URxvt.colorIT:      #87af5f

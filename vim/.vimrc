@@ -24,10 +24,6 @@ set previewheight=8
 set ls=2
 execute 'set listchars+=tab:' . nr2char(187) . nr2char(183)
 au CursorHold * checktime
-set shiftwidth=4
-set tabstop=4
-set smarttab
-set expandtab
 set shiftround
 set sidescrolloff=2
 set scrolloff=2
@@ -36,7 +32,18 @@ set ruler
 set showmode
 set showcmd
 set mouse=a
-" set ttymouse=xterm "Tmux
+
+" use spaces
+set shiftwidth=4
+set tabstop=4
+set smarttab
+set expandtab
+
+" use tabs
+" set autoindent
+" set noexpandtab
+" set tabstop=4
+" set shiftwidth=4
 
 " Bash tab style completion is awesome
 set wildmode=longest,list
