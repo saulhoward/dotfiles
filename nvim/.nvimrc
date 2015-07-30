@@ -18,6 +18,7 @@ Plug 'Shougo/unite.vim'
 Plug 'Shougo/unite-outline'
 Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/neomru.vim'
+Plug 'soh335/unite-outline-go'
 
 " code
 Plug 'fatih/vim-go'
@@ -31,6 +32,7 @@ Plug 'tpope/vim-fugitive'
 
 " misc
 Plug 'ervandew/supertab'
+Plug 'airblade/vim-rooter'
 Plug 'vimwiki'
 Plug 'fountain.vim'
 Plug 'ledger/vim-ledger'
