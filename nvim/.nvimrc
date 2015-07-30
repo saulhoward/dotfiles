@@ -166,3 +166,15 @@ endif
 
 " SuperTab
 "let g:SuperTabDefaultCompletionType = "<c-n>"
+
+" Goyo
+function! s:goyo_enter()
+    colorscheme base16-kaodam
+endfunction
+
+function! s:goyo_leave()
+    colorscheme base16-monokai
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
