@@ -21,13 +21,14 @@ Plug 'Shougo/neomru.vim'
 Plug 'soh335/unite-outline-go'
 
 " code
+Plug 'tomtom/tcomment_vim'
 Plug 'fatih/vim-go'
 Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'kchmck/vim-coffee-script'
 Plug 'puppetlabs/puppet-syntax-vim'
 Plug 'groenewege/vim-less'
-Plug 'kchmck/vim-coffee-script'
-Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-fugitive'
 
 " misc
@@ -178,3 +179,6 @@ endfunction
 
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+" JSX (for .js files as well)
+let g:jsx_ext_required = 0
