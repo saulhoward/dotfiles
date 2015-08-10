@@ -12,6 +12,7 @@ Plug 'chriskempson/base16-vim'
 Plug 'peaksea'
 Plug 'saulhoward/kaodam'
 Plug 'bling/vim-airline'
+Plug 'airblade/vim-gitgutter'
 
 " unite
 Plug 'Shougo/unite.vim'
@@ -19,6 +20,7 @@ Plug 'Shougo/unite-outline'
 Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/neomru.vim'
 Plug 'soh335/unite-outline-go'
+Plug 'osyo-manga/unite-quickfix'
 
 " code
 Plug 'tomtom/tcomment_vim'
@@ -30,6 +32,8 @@ Plug 'kchmck/vim-coffee-script'
 Plug 'puppetlabs/puppet-syntax-vim'
 Plug 'groenewege/vim-less'
 Plug 'tpope/vim-fugitive'
+" needs `npm install -g jsfmt`
+Plug 'mephux/vim-jsfmt'
 
 " misc
 Plug 'ervandew/supertab'
@@ -69,7 +73,7 @@ let g:unite_source_history_yank_enable = 1
 if executable('ag')
   " Use ag in unite grep source.
   let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--smart-case --skip-vcs-ignores --nocolor --nogroup --hidden'
+  let g:unite_source_grep_default_opts = '--smart-case --nocolor --nogroup --hidden'
   let g:unite_source_grep_recursive_opt = ''
 elseif executable('ack-grep')
   " Use ack in unite grep source.
@@ -83,9 +87,9 @@ elseif executable('ack')
   let g:unite_source_grep_recursive_opt = ''
 endif
 
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#custom_source('buffer,buffer_tab', 'filters',
-            \ ['converters', 'converter_buffer_simple'])
+call unite#custom_source('file_rec', 'matchers', ['matcher_fuzzy'])
+call unite#custom_source('buffer,buffer_tab', 'converters', 'converter_buffer_simple')
+call unite#sources#outline#alias('javascript.jsx', 'javascript')
 au BufReadPost *.md call unite#sources#outline#alias('vimwiki', 'markdown')
 
 nnoremap <leader>t :Unite -no-split -buffer-name=files   -start-insert file_rec/async:!<cr>
@@ -95,12 +99,13 @@ nnoremap <leader>o :Unite -no-split -buffer-name=outline -start-insert outline<c
 nnoremap <leader>y :Unite -no-split -buffer-name=yank    history/yank<cr>
 nnoremap <leader>e :Unite -no-split -buffer-name=buffer  -wrap buffer<cr>
 nnoremap <leader>g :Unite -no-split -buffer-name=grep  grep:.<cr>
+nnoremap <leader>q :Unite -no-split -buffer-name=quickfix quickfix<cr>
 
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()
-  " Play nice with supertab
-  let b:SuperTabDisabled=1
+  " Allow supertab
+  imap <buffer> <Tab>   <Plug>SuperTabForward
 
   " Enable navigation with control-j and control-k in insert mode
   imap <buffer> <C-j>   <Plug>(unite_select_next_line)
@@ -167,6 +172,7 @@ endif
 
 " SuperTab
 "let g:SuperTabDefaultCompletionType = "<c-n>"
+let g:SuperTabDefaultCompletionType = "context"
 
 " Goyo
 function! s:goyo_enter()
@@ -182,3 +188,10 @@ autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 " JSX (for .js files as well)
 let g:jsx_ext_required = 0
+
+" jsfmt
+" let g:js_fmt_command = "esformatter"
+" let g:js_fmt_autosave = 1
+
+" use goimports for rewriting import lines
+let g:go_fmt_command = "goimports"
