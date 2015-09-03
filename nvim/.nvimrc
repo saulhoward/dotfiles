@@ -75,6 +75,8 @@ if executable('ag')
   let g:unite_source_grep_command = 'ag'
   let g:unite_source_grep_default_opts = '--smart-case --nocolor --nogroup --hidden'
   let g:unite_source_grep_recursive_opt = ''
+  " use ag for file_rec
+  let g:unite_source_rec_async_command= 'ag --nocolor --nogroup --ignore ''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'' --hidden -g ""'
 elseif executable('ack-grep')
   " Use ack in unite grep source.
   let g:unite_source_grep_command = 'ack-grep'
@@ -92,7 +94,6 @@ call unite#custom_source('buffer,buffer_tab', 'converters', 'converter_buffer_si
 call unite#sources#outline#alias('javascript.jsx', 'javascript')
 au BufReadPost *.md call unite#sources#outline#alias('vimwiki', 'markdown')
 
-nnoremap <leader>t :Unite -no-split -buffer-name=files   -start-insert file_rec/async:!<cr>
 nnoremap <leader>f :Unite -no-split -buffer-name=files   -start-insert file<cr>
 nnoremap <leader>r :Unite -no-split -buffer-name=mru     -start-insert file_mru<cr>
 nnoremap <leader>o :Unite -no-split -buffer-name=outline -start-insert outline<cr>
@@ -100,6 +101,7 @@ nnoremap <leader>y :Unite -no-split -buffer-name=yank    history/yank<cr>
 nnoremap <leader>e :Unite -no-split -buffer-name=buffer  -wrap buffer<cr>
 nnoremap <leader>g :Unite -no-split -buffer-name=grep  grep:.<cr>
 nnoremap <leader>q :Unite -no-split -buffer-name=quickfix quickfix<cr>
+nnoremap <leader>t :Unite -no-split -buffer-name=files -start-insert file_rec/async:!<cr>
 
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
