@@ -42,6 +42,7 @@ Plug 'vimwiki'
 Plug 'fountain.vim'
 Plug 'ledger/vim-ledger'
 Plug 'junegunn/goyo.vim'
+Plug 'reedes/vim-pencil'
 
 " layout
 Plug 'zhaocai/GoldenView.Vim'
@@ -180,13 +181,12 @@ let g:SuperTabDefaultCompletionType = "context"
 function! s:goyo_enter()
     colorscheme base16-kaodam
 endfunction
-
 function! s:goyo_leave()
     colorscheme base16-monokai
 endfunction
-
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
+nnoremap <leader>z :Goyo<cr>
 
 " JSX (for .js files as well)
 let g:jsx_ext_required = 0
@@ -197,3 +197,14 @@ let g:jsx_ext_required = 0
 
 " use goimports for rewriting import lines
 let g:go_fmt_command = "goimports"
+
+" Pencil
+let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd,vimwiki call pencil#init()
+  autocmd FileType text                 call pencil#init()
+  autocmd FileType text                 call pencil#init({'wrap': 'hard'})
+augroup END
+
+set noautochdir
