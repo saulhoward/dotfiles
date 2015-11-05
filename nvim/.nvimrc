@@ -42,6 +42,7 @@ Plug 'vimwiki'
 Plug 'fountain.vim'
 Plug 'ledger/vim-ledger'
 Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
 Plug 'reedes/vim-pencil'
 
 " layout
@@ -180,9 +181,11 @@ let g:SuperTabDefaultCompletionType = "context"
 " Goyo
 function! s:goyo_enter()
     colorscheme base16-kaodam
+    Limelight
 endfunction
 function! s:goyo_leave()
     colorscheme base16-monokai
+    Limelight!
 endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
@@ -202,9 +205,8 @@ let g:go_fmt_command = "goimports"
 let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
 augroup pencil
   autocmd!
-  autocmd FileType markdown,mkd,vimwiki call pencil#init()
-  autocmd FileType text                 call pencil#init()
-  autocmd FileType text                 call pencil#init({'wrap': 'hard'})
+  autocmd FileType markdown,mkd,md,vimwiki call pencil#init()
+  autocmd FileType text                    call pencil#init({'wrap': 'hard'})
 augroup END
 
 set noautochdir

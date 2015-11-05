@@ -188,8 +188,8 @@ map <C-L> <C-W>l
 nnoremap - :put=''<CR>
 nnoremap + :put!=''<CR>
 " have Q reformat the current paragraph (or selected text if there is any):
-nnoremap Q gqap
-vnoremap Q gq
+nnoremap <silent> Q gwap
+vnoremap <silent> Q gw
 " have Y behave analogously to D and C rather than to dd and cc (which is
 " already done by yy):
 noremap Y y$
