@@ -210,3 +210,6 @@ augroup pencil
 augroup END
 
 set noautochdir
+
+" nvim terminal mode
+:tnoremap <Esc> <C-\><C-n>
