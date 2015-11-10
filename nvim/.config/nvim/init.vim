@@ -34,6 +34,7 @@ Plug 'groenewege/vim-less'
 Plug 'tpope/vim-fugitive'
 " needs `npm install -g jsfmt`
 Plug 'mephux/vim-jsfmt'
+Plug 'editorconfig/editorconfig-vim'
 
 " misc
 Plug 'ervandew/supertab'
@@ -213,3 +214,6 @@ set noautochdir
 
 " nvim terminal mode
 :tnoremap <Esc> <C-\><C-n>
+
+" editorconfig
+let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
