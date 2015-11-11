@@ -49,8 +49,6 @@ urxvt*boldFont: xft:Ubuntu Mono:bold:pixelsize=24:autohint=true
 urxvt*italicFont: xft:Ubuntu Mono:italic:pixelsize=24:autohint=true
 urxvt*bolditalicFont: xft:Ubuntu Mono:bold:italic:pixelsize=24:autohint=true
 
-URxvt.letterSpace: -1
-
 ! -- URXVT specifics -- !
 
 ! IBus https://wiki.archlinux.org/index.php/IBus#rxvt-unicode
