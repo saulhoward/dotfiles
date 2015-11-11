@@ -35,3 +35,6 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 ## GVM (go version manager)
 [[ -s "/home/saul/.gvm/scripts/gvm" ]] && source "/home/saul/.gvm/scripts/gvm"
+
+# chromium hidpi fix
+# alias chromium='chromium --force-device-scale-factor=1.25'
