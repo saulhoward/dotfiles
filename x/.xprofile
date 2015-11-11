@@ -17,3 +17,6 @@ dunst &
 
 # disable touchpad while typing
 syndaemon -d -k -t -i 2 &
+
+# unclutter (hide mouse pointer)
+unclutter &

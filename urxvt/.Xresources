@@ -44,12 +44,10 @@ XTerm*termName: xterm-256color
 *.color15:      base07
 
 ! -- Fonts -- !
-urxvt*font: xft:Ubuntu Mono:regular:pixelsize=24:autohint=true
-urxvt*boldFont: xft:Ubuntu Mono:bold:pixelsize=24:autohint=true
-urxvt*italicFont: xft:Ubuntu Mono:italic:pixelsize=24:autohint=true
-urxvt*bolditalicFont: xft:Ubuntu Mono:bold:italic:pixelsize=24:autohint=true
-
-URxvt.letterSpace: -1
+urxvt*font: xft:Ubuntu Mono:regular:pixelsize=18:autohint=true
+urxvt*boldFont: xft:Ubuntu Mono:bold:pixelsize=18:autohint=true
+urxvt*italicFont: xft:Ubuntu Mono:italic:pixelsize=18:autohint=true
+urxvt*bolditalicFont: xft:Ubuntu Mono:bold:italic:pixelsize=18:autohint=true
 
 ! -- URXVT specifics -- !
 
@@ -103,11 +101,10 @@ URxvt.colorUL:      #87afd7
 
 Xcursor.theme: Neutral
 
-! Xft.dpi: 96
-Xft.dpi: 120
-Xft.autohint: 0
-Xft.lcdfilter:  lcddefault
-Xft.hintstyle:  hintfull
-Xft.hinting: 1
-Xft.antialias: 1
-Xft.rgba: rgb
+Xft.dpi:       96
+Xft.antialias: true
+Xft.rgba:      rgb
+Xft.hinting:   true
+Xft.hintstyle: hintfull
+Xft.autohint:  false
+Xft.lcdfilter: lcddefault
