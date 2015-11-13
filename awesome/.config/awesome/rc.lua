@@ -10,6 +10,8 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
+-- lain widgets/layouts
+local lain = require("lain")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -64,8 +66,8 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
 {
-    awful.layout.suit.tile.right,
     awful.layout.suit.max,
+    awful.layout.suit.tile.right,
     awful.layout.suit.floating
 }
 -- local layouts =
@@ -135,6 +137,31 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- {{{ Wibox
 -- Create a textclock widget
 mytextclock = awful.widget.textclock()
+
+ -- lain widgets
+markup = lain.util.markup
+grey   = beautiful.light_grey
+purple = beautiful.light_purple
+batwidget = lain.widgets.bat({
+    settings = function()
+        bat_perc = bat_now.perc
+        if bat_perc == "N/A" then bat_perc = "plug" end
+        widget:set_markup(markup(grey, " bat " .. bat_perc) .. markup(purple, " // "))
+    end
+})
+batwidget:buttons(awful.util.table.join(
+    awful.button({ }, 1, function () awful.util.spawn("urxvtc -e sudo powertop") end)
+))
+
+-- Net checker
+netwidget = lain.widgets.net({
+    settings = function()
+        widget:set_markup(markup(grey, " net " .. net_now.state .. " ") .. markup(purple, "// "))
+    end
+})
+netwidget:buttons(awful.util.table.join(
+    awful.button({ }, 1, function () awful.util.spawn("urxvtc -e sudo iptraf-ng -i all") end)
+))
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -215,6 +242,8 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(netwidget)
+    right_layout:add(batwidget)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
