@@ -426,6 +426,11 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "Skype" },
       properties = { floating = true } },
+    { rule = { class = "Pavucontrol" },
+      properties = {
+          floating = true,
+          ontop = true 
+      } },
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
@@ -499,20 +504,6 @@ client.connect_signal("manage", function (c, startup)
 
         awful.titlebar(c):set_widget(layout)
 
-
-        -- No borders on max
-        local clients = awful.client.visible(s)
-        local layout  = awful.layout.getname(awful.layout.get(s))
-        -- No borders with only one visible client or in maximized layout
-        if #clients > 1 and layout ~= "max" then
-            for _, c in pairs(clients) do -- Floaters always have borders
-                if not awful.rules.match(c, {class = "Synapse"}) and awful.client.floating.get(c) or layout == "floating" then                                     
-                    c.border_width = beautiful.border_width
-                    c.border_color = beautiful.border_focus
-                end
-            end
-        end
-
     end
 end)
 
@@ -528,8 +519,7 @@ for s = 1, screen.count() do screen[s]:connect_signal("arrange", function ()
 
                 -- No borders with only one visible client
                 elseif #clients == 1 or layout == "max" then
-                    clients[1].border_width = 0
-                    awful.client.moveresize(0, 0, 2, 2, clients[1])
+                    c.border_width = 0
                 else
                     c.border_width = beautiful.border_width
                 end
