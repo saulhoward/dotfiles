@@ -362,7 +362,9 @@ for i = 1, 9 do
                   function ()
                         local screen = mouse.screen
                         local tag = awful.tag.gettags(screen)[i]
-                        if tag then
+                        if awful.tag.selected(screen) == tag then
+                           awful.tag.history.restore(screen)
+                        elseif tag then
                            awful.tag.viewonly(tag)
                         end
                   end),
