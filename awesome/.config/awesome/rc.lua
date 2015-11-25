@@ -68,7 +68,8 @@ local layouts =
 {
     awful.layout.suit.max,
     awful.layout.suit.tile.right,
-    awful.layout.suit.floating
+    awful.layout.suit.floating,
+    lain.layout.centerwork
 }
 -- local layouts =
 -- {
@@ -150,7 +151,7 @@ batwidget = lain.widgets.bat({
     end
 })
 batwidget:buttons(awful.util.table.join(
-    awful.button({ }, 1, function () awful.util.spawn("urxvtc -e sudo powertop") end)
+    awful.button({ }, 1, function () awful.util.spawn("urxvtc -e sudo /usr/bin/powertop") end)
 ))
 
 -- Net checker
@@ -160,7 +161,7 @@ netwidget = lain.widgets.net({
     end
 })
 netwidget:buttons(awful.util.table.join(
-    awful.button({ }, 1, function () awful.util.spawn("urxvtc -e sudo iptraf-ng -i all") end)
+    awful.button({ }, 1, function () awful.util.spawn("urxvtc -e sudo /usr/bin/iptraf-ng -i all") end)
 ))
 
 -- Create a wibox for each screen and add it
