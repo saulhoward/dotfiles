@@ -10,6 +10,8 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
+-- lain widgets/layouts
+local lain = require("lain")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -40,6 +42,15 @@ end
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init("/home/saul/.config/awesome/neuro-theme/theme.lua")
 
+-- naughty notifcations
+naughty.config.defaults.font = beautiful.notification_font
+naughty.config.defaults.fg   = beautiful.dark_grey
+naughty.config.defaults.bg   = beautiful.light_purple
+naughty.config.presets.border_color = beautiful.purple
+naughty.config.presets.normal.opacity = 0.8
+naughty.config.presets.low.opacity = 0.8
+naughty.config.presets.critical.opacity = 0.8
+
 -- This is used later as the default terminal and editor to run.
 terminal = "urxvtc"
 editor = os.getenv("EDITOR") or "nano"
@@ -55,9 +66,10 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 local layouts =
 {
-    awful.layout.suit.tile.right,
     awful.layout.suit.max,
-    awful.layout.suit.floating
+    awful.layout.suit.tile.right,
+    awful.layout.suit.floating,
+    lain.layout.centerwork
 }
 -- local layouts =
 -- {
@@ -126,6 +138,31 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- {{{ Wibox
 -- Create a textclock widget
 mytextclock = awful.widget.textclock()
+
+ -- lain widgets
+markup = lain.util.markup
+grey   = beautiful.light_grey
+purple = beautiful.light_purple
+batwidget = lain.widgets.bat({
+    settings = function()
+        bat_perc = bat_now.perc
+        if bat_perc == "N/A" then bat_perc = "plug" end
+        widget:set_markup(markup(grey, " bat " .. bat_perc) .. markup(purple, " // "))
+    end
+})
+batwidget:buttons(awful.util.table.join(
+    awful.button({ }, 1, function () awful.util.spawn("urxvtc -e sudo /usr/bin/powertop") end)
+))
+
+-- Net checker
+netwidget = lain.widgets.net({
+    settings = function()
+        widget:set_markup(markup(grey, " net " .. net_now.state .. " ") .. markup(purple, "// "))
+    end
+})
+netwidget:buttons(awful.util.table.join(
+    awful.button({ }, 1, function () awful.util.spawn("urxvtc -e sudo /usr/bin/iptraf-ng -i all") end)
+))
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -206,6 +243,8 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(netwidget)
+    right_layout:add(batwidget)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
@@ -324,7 +363,9 @@ for i = 1, 9 do
                   function ()
                         local screen = mouse.screen
                         local tag = awful.tag.gettags(screen)[i]
-                        if tag then
+                        if awful.tag.selected(screen) == tag then
+                           awful.tag.history.restore(screen)
+                        elseif tag then
                            awful.tag.viewonly(tag)
                         end
                   end),
@@ -386,6 +427,13 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
+    { rule = { class = "Skype" },
+      properties = { floating = true } },
+    { rule = { class = "Pavucontrol" },
+      properties = {
+          floating = true,
+          ontop = true 
+      } },
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
@@ -459,20 +507,6 @@ client.connect_signal("manage", function (c, startup)
 
         awful.titlebar(c):set_widget(layout)
 
-
-        -- No borders on max
-        local clients = awful.client.visible(s)
-        local layout  = awful.layout.getname(awful.layout.get(s))
-        -- No borders with only one visible client or in maximized layout
-        if #clients > 1 and layout ~= "max" then
-            for _, c in pairs(clients) do -- Floaters always have borders
-                if not awful.rules.match(c, {class = "Synapse"}) and awful.client.floating.get(c) or layout == "floating" then                                     
-                    c.border_width = beautiful.border_width
-                    c.border_color = beautiful.border_focus
-                end
-            end
-        end
-
     end
 end)
 
@@ -488,8 +522,7 @@ for s = 1, screen.count() do screen[s]:connect_signal("arrange", function ()
 
                 -- No borders with only one visible client
                 elseif #clients == 1 or layout == "max" then
-                    clients[1].border_width = 0
-                    awful.client.moveresize(0, 0, 2, 2, clients[1])
+                    c.border_width = 0
                 else
                     c.border_width = beautiful.border_width
                 end

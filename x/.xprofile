@@ -12,9 +12,6 @@ compton -b --config ~/.config/compton.conf &
 # clipboard manager
 (sleep 3s && clipit) &
 
-# notifications
-/usr/lib/xfce4/notifyd/xfce4-notifyd &
-
 # disable touchpad while typing
 syndaemon -d -k -t -i 2 &
 
