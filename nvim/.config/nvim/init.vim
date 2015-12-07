@@ -35,6 +35,8 @@ Plug 'tpope/vim-fugitive'
 " needs `npm install -g jsfmt`
 Plug 'mephux/vim-jsfmt'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'cohama/lexima.vim'
+Plug 'tpope/vim-surround'
 
 " misc
 Plug 'ervandew/supertab'
@@ -157,7 +159,9 @@ if has("gui_running")
 "     set background=dark
 "     colorscheme peaksea
 else
-    set t_Co=256
+    " set t_Co=256
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1 "requires true color terminal
+    let base16colorspace=256
     colorscheme base16-monokai
 endif
 
@@ -171,9 +175,9 @@ hi Comment cterm=italic gui=italic
 " disable Background Color Erase (BCE) so that color schemes
 " render properly when inside 256-color tmux and GNU screen.
 " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
-if &term =~ 'rxvt'
-  set t_ut=
-endif
+" if &term =~ 'rxvt'
+"   set t_ut=
+" endif
 
 " SuperTab
 "let g:SuperTabDefaultCompletionType = "<c-n>"
