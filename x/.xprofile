@@ -9,5 +9,8 @@ compton -b --config ~/.config/compton.conf &
 # clipboard manager
 (sleep 3s && clipit) &
 
+# disable cursor when left alone
+unclutter &
+
 # disable touchpad while typing
 syndaemon -d -k -t -i 2 &
