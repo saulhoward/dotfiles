@@ -8,11 +8,12 @@ source ~/.vimrc
 call plug#begin('~/.vim/plugged')
 
 " style
-Plug 'chriskempson/base16-vim'
-Plug 'peaksea'
-Plug 'saulhoward/kaodam'
 Plug 'bling/vim-airline'
 Plug 'airblade/vim-gitgutter'
+" Plug 'chriskempson/base16-vim'
+" Plug 'peaksea'
+Plug 'geoffharcourt/one-dark.vim'
+Plug 'reedes/vim-colors-pencil'
 
 " unite
 Plug 'Shougo/unite.vim'
@@ -66,8 +67,7 @@ let g:airline_left_sep=''
 let g:airline_right_sep=''
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
-" remove unused modes
-let g:airline_theme="dark"
+let g:airline_theme="badwolf"
 let g:airline#extensions#whitespace#enabled = 0
 " tabline at top
 let g:airline#extensions#tabline#enabled = 1
@@ -147,7 +147,7 @@ let g:vimwiki_list = [{'path': '~/sync/wiki/',
 syntax on
 set background=dark
 if has("gui_running")
-    colorscheme base16-monokai
+    colorscheme onedark
     set guifont=Ubuntu\ Mono\ 14
     set guioptions-=m  "menu bar
     set guioptions-=T  "toolbar
@@ -159,10 +159,11 @@ if has("gui_running")
 "     set background=dark
 "     colorscheme peaksea
 else
-    " set t_Co=256
+    set t_Co=256
+    " let base16colorspace=256
+    " colorscheme base16-monokai
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1 "requires true color terminal
-    let base16colorspace=256
-    colorscheme base16-monokai
+    colorscheme onedark
 endif
 
 " Colorscheme overrides
@@ -184,12 +185,15 @@ hi Comment cterm=italic gui=italic
 let g:SuperTabDefaultCompletionType = "context"
 
 " Goyo
+let g:limelight_conceal_guifg = 1 " nvim truecolor fix
 function! s:goyo_enter()
-    colorscheme base16-kaodam
+    set background=dark
+    let g:pencil_terminal_italics = 1
+    colorscheme pencil
     Limelight
 endfunction
 function! s:goyo_leave()
-    colorscheme base16-monokai
+    colorscheme onedark
     Limelight!
 endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
