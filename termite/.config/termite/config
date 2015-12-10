@@ -3,8 +3,8 @@ font = Ubuntu Mono 15
 scroll_on_output = false
 scroll_on_keystroke = true
 audible_bell = false
-mouse_autohide = false
-; allow_bold = false
+mouse_autohide = true
+allow_bold = true
 dynamic_title = true
 urgent_on_bell = true
 clickable_url = true
@@ -33,9 +33,9 @@ browser = chromium
 # special
 foreground      = #f8f8f2
 foreground_bold = #f8f8f2
-cursor          = #FD971F
-#background      = #272822
 background = rgba(00, 00, 00, 0.9)
+# cursor          = #FD971F
+# background      = #272822
 
 # black
 color0  = #272822
