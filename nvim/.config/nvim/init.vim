@@ -36,11 +36,11 @@ Plug 'tpope/vim-fugitive'
 " needs `npm install -g jsfmt`
 Plug 'mephux/vim-jsfmt'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'cohama/lexima.vim'
 Plug 'tpope/vim-surround'
+Plug 'Shougo/deoplete.nvim'
+Plug 'zchee/deoplete-go'
 
 " misc
-Plug 'ervandew/supertab'
 Plug 'airblade/vim-rooter'
 Plug 'vimwiki'
 Plug 'fountain.vim'
@@ -111,9 +111,6 @@ nnoremap <leader>t :Unite -no-split -buffer-name=files -start-insert file_rec/as
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()
-  " Allow supertab
-  imap <buffer> <Tab>   <Plug>SuperTabForward
-
   " Enable navigation with control-j and control-k in insert mode
   imap <buffer> <C-j>   <Plug>(unite_select_next_line)
   imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
@@ -160,8 +157,6 @@ if has("gui_running")
 "     colorscheme peaksea
 else
     set t_Co=256
-    " let base16colorspace=256
-    " colorscheme base16-monokai
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1 "requires true color terminal
     colorscheme onedark
 endif
@@ -179,10 +174,6 @@ hi Comment cterm=italic gui=italic
 " if &term =~ 'rxvt'
 "   set t_ut=
 " endif
-
-" SuperTab
-"let g:SuperTabDefaultCompletionType = "<c-n>"
-let g:SuperTabDefaultCompletionType = "context"
 
 " Goyo
 let g:limelight_conceal_guifg = 1 " nvim truecolor fix
@@ -225,3 +216,32 @@ set noautochdir
 
 " editorconfig
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+
+" deocomplete
+let g:python3_host_prog  = '/usr/bin/python3' " for neovim python-client
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#disable_auto_complete = 1
+set completeopt-=preview
+" set completeopt-=noinsert,noselect
+set completeopt+=longest,menuone
+let g:deoplete#auto_completion_start_length = 0
+let g:deoplete#sources#go = 'vim-go'
+
+" <Tab> completion:
+" 1. If popup menu is visible, select and insert next item
+" 2. Otherwise, if preceding chars are whitespace, insert tab char
+" 3. Otherwise, start manual autocomplete
+inoremap <silent><expr><Tab> pumvisible() ? "\<C-n>"
+    \ : (<SID>is_whitespace() ? "\<Tab>"
+    \ : deoplete#mappings#manual_complete())
+
+snoremap <silent><expr><Tab> pumvisible() ? "\<C-n>"
+    \ : (<SID>is_whitespace() ? "\<Tab>"
+    \ : deoplete#mappings#manual_complete())
+
+inoremap <expr><S-Tab>  pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:is_whitespace() "{{{
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~? '\s'
+endfunction "}}}
