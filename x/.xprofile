@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# merge custom x resources
-xrdb -merge "${HOME}/.Xresources" &
- 
-# start the terminal emulator daemon
-urxvtd -q -f -o &
+# URXVT settings
+# # merge custom x resources
+# xrdb -merge "${HOME}/.Xresources" &
+# # start the terminal emulator daemon
+# urxvtd -q -f -o &
 
 # compositing manager
 compton -b --config ~/.config/compton.conf &

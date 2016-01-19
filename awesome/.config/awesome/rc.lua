@@ -52,7 +52,7 @@ naughty.config.presets.low.opacity = 0.8
 naughty.config.presets.critical.opacity = 0.8
 
 -- This is used later as the default terminal and editor to run.
-terminal = "urxvtc"
+terminal = "termite"
 editor = os.getenv("EDITOR") or "nano"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -151,7 +151,7 @@ batwidget = lain.widgets.bat({
     end
 })
 batwidget:buttons(awful.util.table.join(
-    awful.button({ }, 1, function () awful.util.spawn("urxvtc -e sudo /usr/bin/powertop") end)
+    awful.button({ }, 1, function () awful.util.spawn("termite -e sudo /usr/bin/powertop") end)
 ))
 
 -- Net checker
@@ -161,7 +161,7 @@ netwidget = lain.widgets.net({
     end
 })
 netwidget:buttons(awful.util.table.join(
-    awful.button({ }, 1, function () awful.util.spawn("urxvtc -e sudo /usr/bin/iptraf-ng -i all") end)
+    awful.button({ }, 1, function () awful.util.spawn("termite -e sudo /usr/bin/iptraf-ng -i all") end)
 ))
 
 -- Create a wibox for each screen and add it
