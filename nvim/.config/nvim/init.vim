@@ -8,11 +8,10 @@ source ~/.vimrc
 call plug#begin('~/.vim/plugged')
 
 " style
-Plug 'chriskempson/base16-vim'
-Plug 'peaksea'
-Plug 'saulhoward/kaodam'
 Plug 'bling/vim-airline'
 Plug 'airblade/vim-gitgutter'
+Plug 'geoffharcourt/one-dark.vim'
+Plug 'reedes/vim-colors-pencil'
 
 " unite
 Plug 'Shougo/unite.vim'
@@ -35,9 +34,11 @@ Plug 'tpope/vim-fugitive'
 " needs `npm install -g jsfmt`
 Plug 'mephux/vim-jsfmt'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'tpope/vim-surround'
+Plug 'Shougo/deoplete.nvim'
+Plug 'zchee/deoplete-go'
 
 " misc
-Plug 'ervandew/supertab'
 Plug 'airblade/vim-rooter'
 Plug 'vimwiki'
 Plug 'fountain.vim'
@@ -64,8 +65,7 @@ let g:airline_left_sep=''
 let g:airline_right_sep=''
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
-" remove unused modes
-let g:airline_theme="dark"
+let g:airline_theme="badwolf"
 let g:airline#extensions#whitespace#enabled = 0
 " tabline at top
 let g:airline#extensions#tabline#enabled = 1
@@ -109,9 +109,6 @@ nnoremap <leader>t :Unite -no-split -buffer-name=files -start-insert file_rec/as
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()
-  " Allow supertab
-  imap <buffer> <Tab>   <Plug>SuperTabForward
-
   " Enable navigation with control-j and control-k in insert mode
   imap <buffer> <C-j>   <Plug>(unite_select_next_line)
   imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
@@ -145,7 +142,7 @@ let g:vimwiki_list = [{'path': '~/sync/wiki/',
 syntax on
 set background=dark
 if has("gui_running")
-    colorscheme base16-monokai
+    colorscheme onedark
     set guifont=Ubuntu\ Mono\ 14
     set guioptions-=m  "menu bar
     set guioptions-=T  "toolbar
@@ -158,7 +155,8 @@ if has("gui_running")
 "     colorscheme peaksea
 else
     set t_Co=256
-    colorscheme base16-monokai
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1 "requires true color terminal
+    colorscheme onedark
 endif
 
 " Colorscheme overrides
@@ -171,21 +169,20 @@ hi Comment cterm=italic gui=italic
 " disable Background Color Erase (BCE) so that color schemes
 " render properly when inside 256-color tmux and GNU screen.
 " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
-if &term =~ 'rxvt'
-  set t_ut=
-endif
-
-" SuperTab
-"let g:SuperTabDefaultCompletionType = "<c-n>"
-let g:SuperTabDefaultCompletionType = "context"
+" if &term =~ 'rxvt'
+"   set t_ut=
+" endif
 
 " Goyo
+let g:limelight_conceal_guifg = 1 " nvim truecolor fix
 function! s:goyo_enter()
-    colorscheme base16-kaodam
+    set background=dark
+    let g:pencil_terminal_italics = 1
+    colorscheme pencil
     Limelight
 endfunction
 function! s:goyo_leave()
-    colorscheme base16-monokai
+    colorscheme onedark
     Limelight!
 endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
@@ -206,8 +203,8 @@ let g:go_fmt_command = "goimports"
 let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
 augroup pencil
   autocmd!
-  autocmd FileType markdown,mkd,md,vimwiki call pencil#init()
-  autocmd FileType text                    call pencil#init({'wrap': 'hard'})
+  autocmd FileType markdown,mkd,md,vimwiki,tex call pencil#init()
+  autocmd FileType text                        call pencil#init({'wrap': 'hard'})
 augroup END
 
 set noautochdir
@@ -217,3 +214,32 @@ set noautochdir
 
 " editorconfig
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+
+" deocomplete
+let g:python3_host_prog  = '/usr/bin/python3' " for neovim python-client
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#disable_auto_complete = 1
+set completeopt-=preview
+" set completeopt-=noinsert,noselect
+set completeopt+=longest,menuone
+let g:deoplete#auto_completion_start_length = 0
+let g:deoplete#sources#go = 'vim-go'
+
+" <Tab> completion:
+" 1. If popup menu is visible, select and insert next item
+" 2. Otherwise, if preceding chars are whitespace, insert tab char
+" 3. Otherwise, start manual autocomplete
+inoremap <silent><expr><Tab> pumvisible() ? "\<C-n>"
+    \ : (<SID>is_whitespace() ? "\<Tab>"
+    \ : deoplete#mappings#manual_complete())
+
+snoremap <silent><expr><Tab> pumvisible() ? "\<C-n>"
+    \ : (<SID>is_whitespace() ? "\<Tab>"
+    \ : deoplete#mappings#manual_complete())
+
+inoremap <expr><S-Tab>  pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:is_whitespace() "{{{
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~? '\s'
+endfunction "}}}
