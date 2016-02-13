@@ -12,6 +12,7 @@ Plug 'bling/vim-airline'
 Plug 'airblade/vim-gitgutter'
 Plug 'geoffharcourt/one-dark.vim'
 Plug 'reedes/vim-colors-pencil'
+Plug 'AndrewRadev/splitjoin.vim'
 
 " unite
 Plug 'Shougo/unite.vim'
@@ -20,41 +21,52 @@ Plug 'Shougo/vimfiler.vim'
 Plug 'Shougo/neomru.vim'
 Plug 'soh335/unite-outline-go'
 Plug 'osyo-manga/unite-quickfix'
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 
 " code
 Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-surround'
 Plug 'fatih/vim-go'
 Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
-Plug 'pangloss/vim-javascript'
+Plug 'pangloss/vim-javascript', {'for' : 'javascript'}
 Plug 'mxw/vim-jsx'
 Plug 'kchmck/vim-coffee-script'
 Plug 'puppetlabs/puppet-syntax-vim'
 Plug 'groenewege/vim-less'
 Plug 'tpope/vim-fugitive'
-" needs `npm install -g jsfmt`
-Plug 'mephux/vim-jsfmt'
+Plug 'mephux/vim-jsfmt', {'for' : 'javascript'} " needs `npm install -g jsfmt`
 Plug 'editorconfig/editorconfig-vim'
-Plug 'tpope/vim-surround'
+Plug 'vim-ruby/vim-ruby', {'for' : 'ruby'}
+Plug 'elzr/vim-json', {'for' : 'json'}
+Plug 'tejr/vim-tmux', {'for': 'tmux'}
+Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
+Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
+Plug 'corylanou/vim-present', {'for' : 'present'}
+Plug 'godlygeek/tabular'
+Plug 'vimwiki'
+Plug 'plasticboy/vim-markdown'
+
+" deoplete
 Plug 'Shougo/deoplete.nvim'
-Plug 'zchee/deoplete-go'
+Plug 'zchee/deoplete-go', { 'do': 'make'}
 
 " misc
 Plug 'airblade/vim-rooter'
-Plug 'vimwiki'
 Plug 'fountain.vim'
 Plug 'ledger/vim-ledger'
 Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim'
+Plug 'tiokksar/limelight.vim'
 Plug 'reedes/vim-pencil'
 
 " layout
-Plug 'zhaocai/GoldenView.Vim'
+Plug 'cHoco/GoldenView.Vim'
 
 call plug#end()
 
 " plugin specific settings
 
 " goldenview
+let g:goldenview__enable_at_startup=0
 let g:goldenview__enable_default_mapping=0
 nmap <F4> <Plug>ToggleGoldenViewAutoResize
 nmap <leader>s <Plug>GoldenViewSplit
@@ -65,7 +77,7 @@ let g:airline_left_sep=''
 let g:airline_right_sep=''
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline_theme="badwolf"
+let g:airline_theme="onedark"
 let g:airline#extensions#whitespace#enabled = 0
 " tabline at top
 let g:airline#extensions#tabline#enabled = 1
@@ -134,8 +146,11 @@ nnoremap <silent> <leader>d :<C-u>VimFiler -quit -buffer-name=explorer<CR>
 nmap <F3> :silent %w !xclip -selection clipboard<CR>
 
 " vimwiki
-let g:vimwiki_list = [{'path': '~/sync/wiki/',
+let g:vimwiki_global_ext = 0
+let g:vimwiki_list = [{'path': '~/sync/centralway/wiki/',
                      \ 'syntax': 'markdown', 'ext': '.md'}]
+
+let g:vim_markdown_folding_disabled = 1
 
 " Colors **********************************************************************
 " Has to be after bundle because theme is loaded then
@@ -143,6 +158,7 @@ syntax on
 set background=dark
 if has("gui_running")
     colorscheme onedark
+    let g:onedark_nonitalic = 0
     set guifont=Ubuntu\ Mono\ 14
     set guioptions-=m  "menu bar
     set guioptions-=T  "toolbar
@@ -154,7 +170,6 @@ if has("gui_running")
 "     set background=dark
 "     colorscheme peaksea
 else
-    set t_Co=256
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1 "requires true color terminal
     colorscheme onedark
 endif
@@ -174,19 +189,25 @@ hi Comment cterm=italic gui=italic
 " endif
 
 " Goyo
-let g:limelight_conceal_guifg = 1 " nvim truecolor fix
+" let g:limelight_conceal_guifg = 1 " nvim truecolor fix
 function! s:goyo_enter()
+    " DisableGoldenViewAutoResize
     set background=dark
     let g:pencil_terminal_italics = 1
     colorscheme pencil
+    set scrolloff=999
     Limelight
 endfunction
 function! s:goyo_leave()
+    EnableGoldenViewAutoResize
     colorscheme onedark
+    set scrolloff=2
     Limelight!
 endfunction
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+autocmd! User GoyoEnter
+autocmd! User GoyoLeave
+autocmd  User GoyoEnter nested call <SID>goyo_enter()
+autocmd  User GoyoLeave nested call <SID>goyo_leave()
 nnoremap <leader>z :Goyo<cr>
 
 " JSX (for .js files as well)
@@ -196,8 +217,11 @@ let g:jsx_ext_required = 0
 " let g:js_fmt_command = "esformatter"
 " let g:js_fmt_autosave = 1
 
+" Go
 " use goimports for rewriting import lines
 let g:go_fmt_command = "goimports"
+" vim-go extra mappings
+au FileType go nmap <Leader>gd <Plug>(go-def-split)
 
 " Pencil
 let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
@@ -223,7 +247,16 @@ set completeopt-=preview
 " set completeopt-=noinsert,noselect
 set completeopt+=longest,menuone
 let g:deoplete#auto_completion_start_length = 0
+
+let g:deoplete#ignore_sources = {}
+let g:deoplete#ignore_sources._ = ['buffer', 'member', 'tag', 'file', 'neosnippet']
+
 let g:deoplete#sources#go = 'vim-go'
+let g:deoplete#sources#go#sort_class = ['func', 'type', 'var', 'const']
+
+" Use partial fuzzy matches like YouCompleteMe
+call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
+
 
 " <Tab> completion:
 " 1. If popup menu is visible, select and insert next item
