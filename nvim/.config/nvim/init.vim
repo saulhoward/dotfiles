@@ -147,7 +147,7 @@ nmap <F3> :silent %w !xclip -selection clipboard<CR>
 
 " vimwiki
 let g:vimwiki_global_ext = 0
-let g:vimwiki_list = [{'path': '~/sync/centralway/wiki/',
+let g:vimwiki_list = [{'path': '~/sync/wiki/',
                      \ 'syntax': 'markdown', 'ext': '.md'}]
 
 let g:vim_markdown_folding_disabled = 1
