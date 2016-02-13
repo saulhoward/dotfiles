@@ -43,6 +43,7 @@ Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'godlygeek/tabular'
+Plug 'vimwiki'
 Plug 'plasticboy/vim-markdown'
 
 " deoplete
@@ -51,7 +52,6 @@ Plug 'zchee/deoplete-go', { 'do': 'make'}
 
 " misc
 Plug 'airblade/vim-rooter'
-Plug 'vimwiki'
 Plug 'fountain.vim'
 Plug 'ledger/vim-ledger'
 Plug 'junegunn/goyo.vim'
@@ -59,13 +59,14 @@ Plug 'tiokksar/limelight.vim'
 Plug 'reedes/vim-pencil'
 
 " layout
-Plug 'zhaocai/GoldenView.Vim'
+Plug 'cHoco/GoldenView.Vim'
 
 call plug#end()
 
 " plugin specific settings
 
 " goldenview
+let g:goldenview__enable_at_startup=0
 let g:goldenview__enable_default_mapping=0
 nmap <F4> <Plug>ToggleGoldenViewAutoResize
 nmap <leader>s <Plug>GoldenViewSplit
@@ -145,8 +146,11 @@ nnoremap <silent> <leader>d :<C-u>VimFiler -quit -buffer-name=explorer<CR>
 nmap <F3> :silent %w !xclip -selection clipboard<CR>
 
 " vimwiki
-let g:vimwiki_list = [{'path': '~/sync/wiki/',
+let g:vimwiki_global_ext = 0
+let g:vimwiki_list = [{'path': '~/sync/centralway/wiki/',
                      \ 'syntax': 'markdown', 'ext': '.md'}]
+
+let g:vim_markdown_folding_disabled = 1
 
 " Colors **********************************************************************
 " Has to be after bundle because theme is loaded then
@@ -187,17 +191,23 @@ hi Comment cterm=italic gui=italic
 " Goyo
 " let g:limelight_conceal_guifg = 1 " nvim truecolor fix
 function! s:goyo_enter()
+    " DisableGoldenViewAutoResize
     set background=dark
     let g:pencil_terminal_italics = 1
     colorscheme pencil
+    set scrolloff=999
     Limelight
 endfunction
 function! s:goyo_leave()
+    EnableGoldenViewAutoResize
     colorscheme onedark
+    set scrolloff=2
     Limelight!
 endfunction
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+autocmd! User GoyoEnter
+autocmd! User GoyoLeave
+autocmd  User GoyoEnter nested call <SID>goyo_enter()
+autocmd  User GoyoLeave nested call <SID>goyo_leave()
 nnoremap <leader>z :Goyo<cr>
 
 " JSX (for .js files as well)

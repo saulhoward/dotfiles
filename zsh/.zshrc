@@ -21,9 +21,9 @@ RPROMPT=" %{$fg[blue]%}%~%{$reset_color%}"
 export PATH=$PATH:/home/saul/bin:/usr/local/bin
 export PATH=$PATH:/usr/bin/vendor_perl
 
-export EDITOR=vim
-export VISUAL=vim
 alias vim=nvim
+export VISUAL=nvim
+export EDITOR="$VISUAL"
 
 # alias ls='ls --group-directories-first --time-style=+"%d.%m.%Y %H:%M" --color=auto'
 # alias ll='ls -lh --group-directories-first --time-style=+"%d.%m.%Y %H:%M" --color=auto'
