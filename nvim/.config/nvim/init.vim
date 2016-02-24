@@ -48,6 +48,7 @@ Plug 'plasticboy/vim-markdown'
 
 " deoplete
 Plug 'Shougo/deoplete.nvim'
+Plug 'ternjs/tern_for_vim', {'for' : 'javascript', 'do': 'npm install' }
 Plug 'zchee/deoplete-go', { 'do': 'make'}
 
 " misc
@@ -189,13 +190,13 @@ hi Comment cterm=italic gui=italic
 " endif
 
 " Goyo
-" let g:limelight_conceal_guifg = 1 " nvim truecolor fix
 function! s:goyo_enter()
     " DisableGoldenViewAutoResize
+    set scrolloff=999
     set background=dark
     let g:pencil_terminal_italics = 1
     colorscheme pencil
-    set scrolloff=999
+    let g:limelight_conceal_ctermfg = 0
     Limelight
 endfunction
 function! s:goyo_leave()
