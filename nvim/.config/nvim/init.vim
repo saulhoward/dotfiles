@@ -11,6 +11,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'bling/vim-airline'
 Plug 'airblade/vim-gitgutter'
 Plug 'geoffharcourt/one-dark.vim'
+Plug 'whatyouhide/vim-gotham'
 Plug 'reedes/vim-colors-pencil'
 Plug 'AndrewRadev/splitjoin.vim'
 
@@ -56,7 +57,7 @@ Plug 'airblade/vim-rooter'
 Plug 'fountain.vim'
 Plug 'ledger/vim-ledger'
 Plug 'junegunn/goyo.vim'
-Plug 'tiokksar/limelight.vim'
+Plug 'junegunn/limelight.vim'
 Plug 'reedes/vim-pencil'
 
 " layout
@@ -167,11 +168,10 @@ if has("gui_running")
     set guioptions-=LlRrb
     set lines=73 columns=260
 " elseif &diff
-"     set t_Co=256
-"     set background=dark
 "     colorscheme peaksea
 else
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1 "requires true color terminal
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    " set termguicolors " true colors
     colorscheme onedark
 endif
 
@@ -194,9 +194,10 @@ function! s:goyo_enter()
     " DisableGoldenViewAutoResize
     set scrolloff=999
     set background=dark
-    let g:pencil_terminal_italics = 1
-    colorscheme pencil
-    let g:limelight_conceal_ctermfg = 0
+    " let g:pencil_terminal_italics = 1
+    " colorscheme pencil
+    colorscheme gotham
+    " let g:limelight_conceal_ctermfg = 0
     Limelight
 endfunction
 function! s:goyo_leave()
@@ -249,8 +250,8 @@ set completeopt-=preview
 set completeopt+=longest,menuone
 let g:deoplete#auto_completion_start_length = 0
 
-let g:deoplete#ignore_sources = {}
-let g:deoplete#ignore_sources._ = ['buffer', 'member', 'tag', 'file', 'neosnippet']
+" let g:deoplete#ignore_sources = {}
+" let g:deoplete#ignore_sources._ = ['buffer', 'member', 'tag', 'file', 'neosnippet']
 
 let g:deoplete#sources#go = 'vim-go'
 let g:deoplete#sources#go#sort_class = ['func', 'type', 'var', 'const']
