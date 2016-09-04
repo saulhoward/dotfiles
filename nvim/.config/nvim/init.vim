@@ -12,11 +12,13 @@ Plug 'bling/vim-airline'
 Plug 'geoffharcourt/one-dark.vim'
 Plug 'whatyouhide/vim-gotham'
 Plug 'reedes/vim-colors-pencil'
+" Plug 'junegunn/vim-emoji'
 
 " unite
 Plug 'Shougo/unite.vim'
 Plug 'Shougo/unite-outline'
 Plug 'Shougo/vimfiler.vim'
+Plug 'Shougo/neoyank.vim'
 Plug 'Shougo/neomru.vim'
 Plug 'soh335/unite-outline-go'
 Plug 'osyo-manga/unite-quickfix'
@@ -28,6 +30,12 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-unimpaired'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'tpope/vim-surround'
+Plug 'justinmk/vim-sneak'
+
+" wiki/notes
+Plug 'godlygeek/tabular'
+Plug 'vimwiki'
+Plug 'fmoralesc/vim-pad'
 
 " git
 Plug 'tpope/vim-fugitive'
@@ -38,20 +46,18 @@ Plug 'tomtom/tcomment_vim'
 Plug 'fatih/vim-go', {'for' : 'go'}
 Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 Plug 'pangloss/vim-javascript', {'for' : 'javascript'}
-Plug 'mxw/vim-jsx'
-Plug 'kchmck/vim-coffee-script'
-Plug 'puppetlabs/puppet-syntax-vim'
-Plug 'groenewege/vim-less'
-Plug 'mephux/vim-jsfmt', {'for' : 'javascript'} " needs `npm install -g jsfmt`
+Plug 'mxw/vim-jsx', {'for' : 'javascript'}
+Plug 'kchmck/vim-coffee-script', {'for' : 'coffee'}
+Plug 'puppetlabs/puppet-syntax-vim', {'for' : 'puppet'}
+Plug 'groenewege/vim-less', {'for' : 'less'}
+" Plug 'mephux/vim-jsfmt', {'for' : 'javascript'} " needs `npm install -g jsfmt`
 Plug 'editorconfig/editorconfig-vim'
 Plug 'vim-ruby/vim-ruby', {'for' : 'ruby'}
 Plug 'elzr/vim-json', {'for' : 'json'}
-" Plug 'tejr/vim-tmux', {'for': 'tmux'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'corylanou/vim-present', {'for' : 'present'}
-Plug 'godlygeek/tabular'
-Plug 'vimwiki'
+Plug 'keith/swift.vim', {'for' : 'swift'}
 Plug 'plasticboy/vim-markdown'
 Plug 'cespare/vim-toml', {'for': 'toml'}
 Plug 'rust-lang/rust.vim', {'for': 'rust'}
@@ -62,9 +68,14 @@ Plug 'hail2u/vim-css3-syntax'
 Plug 'ap/vim-css-color'
 
 " deoplete
-Plug 'Shougo/deoplete.nvim'
-Plug 'ternjs/tern_for_vim', {'for' : 'javascript', 'do': 'npm install' }
-Plug 'zchee/deoplete-go', { 'do': 'make'}
+" let g:python3_host_prog  = '/usr/local/bin/python3.5' " for neovim python-client
+" let g:python3_host_skip_check = 1
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
+Plug 'carlitux/deoplete-ternjs', { 'for': 'javascript' }
 
 " snippets
 Plug 'Shougo/neosnippet'
@@ -78,10 +89,9 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'reedes/vim-pencil'
 
-Plug 'fmoralesc/vim-pad'
-
 " layout
 Plug 'cHoco/GoldenView.Vim'
+Plug 'blueyed/vim-diminactive'
 
 call plug#end()
 
@@ -169,10 +179,19 @@ nmap <F3> :silent %w !xclip -selection clipboard<CR>
 
 " vimwiki
 let g:vimwiki_global_ext = 0
+let g:vimwiki_folding = 1
 let g:vimwiki_list = [{'path': '~/sync/wiki/',
                      \ 'syntax': 'markdown', 'ext': '.md'}]
 
-let g:vim_markdown_folding_disabled = 1
+"move around windows with ctrl key!
+map <C-H> <C-W>h
+map <C-J> <C-W>j
+map <C-K> <C-W>k
+map <C-L> <C-W>l
+
+" markdown
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_folding_level = 3
 
 " Colors **********************************************************************
 " Has to be after bundle because theme is loaded then
@@ -197,6 +216,7 @@ endif
 
 " Colorscheme overrides
 hi Comment cterm=italic gui=italic
+" hi ColorColumn ctermbg=0 guibg=#000000 " used by diminactive
 
 " Set zazen colorscheme for fountain
 " autocmd! BufEnter,BufNewFile *.fountain colo zazen
@@ -243,14 +263,15 @@ let g:jsx_ext_required = 0
 " use goimports for rewriting import lines
 let g:go_fmt_command = "goimports"
 " vim-go extra mappings
-au FileType go nmap <Leader>gd <Plug>(go-def-split)
+au FileType go nmap <Leader>gd <Plug>(go-def-vertical)
+au FileType go nmap <leader>gt <Plug>(go-test)
 
 " Pencil
 let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
 augroup pencil
   autocmd!
-  autocmd FileType markdown,mkd,md,vimwiki,tex call pencil#init()
-  autocmd FileType text                        call pencil#init({'wrap': 'hard'})
+  autocmd FileType markdown,mkd,md,vimwiki,tex,rst call pencil#init()
+  autocmd FileType text                            call pencil#init({'wrap': 'hard'})
 augroup END
 
 set noautochdir
@@ -275,8 +296,10 @@ let g:deoplete#ignore_sources = {}
 let g:deoplete#ignore_sources._ = ["neosnippet"]
 " let g:deoplete#ignore_sources._ = ['buffer', 'member', 'tag', 'file', 'neosnippet']
 
+" deoplete-go
 let g:deoplete#sources#go = 'vim-go'
-let g:deoplete#sources#go#sort_class = ['func', 'type', 'var', 'const']
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+let g:deoplete#sources#go#gocode_binary = '/Users/saulhoward/go/bin/gocode'
 
 " Use partial fuzzy matches like YouCompleteMe
 call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
@@ -312,6 +335,7 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 " rust rustlang racer
 let g:racer_cmd = "/usr/bin/racer"
 let $RUST_SRC_PATH="/usr/src/rust/src/"
+let g:rustfmt_autosave = 1
 
 " " vim-pad
 " " let g:pad#set_mappings = 0
