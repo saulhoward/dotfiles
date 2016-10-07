@@ -9,10 +9,9 @@ call plug#begin('~/.vim/plugged')
 
 " style
 Plug 'bling/vim-airline'
-Plug 'geoffharcourt/one-dark.vim'
+Plug 'rakr/vim-one'
 Plug 'whatyouhide/vim-gotham'
 Plug 'reedes/vim-colors-pencil'
-" Plug 'junegunn/vim-emoji'
 
 " unite
 Plug 'Shougo/unite.vim'
@@ -23,6 +22,9 @@ Plug 'Shougo/neomru.vim'
 Plug 'soh335/unite-outline-go'
 Plug 'osyo-manga/unite-quickfix'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+
+" denite
+Plug 'Shougo/denite.nvim'
 
 " editing
 Plug 'vim-scripts/matchit.zip'
@@ -88,6 +90,7 @@ Plug 'ledger/vim-ledger'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'reedes/vim-pencil'
+Plug 'christoomey/vim-tmux-navigator'
 
 " layout
 Plug 'cHoco/GoldenView.Vim'
@@ -109,7 +112,7 @@ let g:airline_left_sep=''
 let g:airline_right_sep=''
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline_theme="onedark"
+let g:airline_theme="one"
 let g:airline#extensions#whitespace#enabled = 0
 " tabline at top
 let g:airline#extensions#tabline#enabled = 1
@@ -117,38 +120,15 @@ let g:airline#extensions#tabline#enabled = 1
 " Unite
 let g:unite_source_history_yank_enable = 1
 
-if executable('ag')
-  " Use ag in unite grep source.
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts = '--smart-case --nocolor --nogroup --hidden'
-  let g:unite_source_grep_recursive_opt = ''
-  " use ag for file_rec
-  let g:unite_source_rec_async_command= 'ag --nocolor --nogroup --ignore ''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'' --hidden -g ""'
-elseif executable('ack-grep')
-  " Use ack in unite grep source.
-  let g:unite_source_grep_command = 'ack-grep'
-  let g:unite_source_grep_default_opts = '--no-heading --no-color --nogroup --with-filename'
-  let g:unite_source_grep_recursive_opt = ''
-elseif executable('ack')
-  " Use ack in unite grep source.
-  let g:unite_source_grep_command = 'ack'
-  let g:unite_source_grep_default_opts = '--no-heading --no-color --nogroup --with-filename'
-  let g:unite_source_grep_recursive_opt = ''
-endif
-
-call unite#custom_source('file_rec', 'matchers', ['matcher_fuzzy'])
 call unite#custom_source('buffer,buffer_tab', 'converters', 'converter_buffer_simple')
 call unite#sources#outline#alias('javascript.jsx', 'javascript')
 au BufReadPost *.md call unite#sources#outline#alias('vimwiki', 'markdown')
 
-nnoremap <leader>f :Unite -no-split -buffer-name=files   -start-insert file<cr>
-nnoremap <leader>r :Unite -no-split -buffer-name=mru     -start-insert file_mru<cr>
 nnoremap <leader>o :Unite -no-split -buffer-name=outline -start-insert outline<cr>
 nnoremap <leader>y :Unite -no-split -buffer-name=yank    history/yank<cr>
 nnoremap <leader>e :Unite -no-split -buffer-name=buffer  -wrap buffer<cr>
-nnoremap <leader>g :Unite -no-split -buffer-name=grep  grep:.<cr>
 nnoremap <leader>q :Unite -no-split -buffer-name=quickfix quickfix<cr>
-nnoremap <leader>t :Unite -no-split -buffer-name=files -start-insert file_rec/async:!<cr>
+nnoremap <leader>l :Unite -no-split -buffer-name=location location_list<cr>
 
 " Custom mappings for the unite buffer
 autocmd FileType unite call s:unite_settings()
@@ -159,6 +139,36 @@ function! s:unite_settings()
 
   nmap <buffer> <ESC> <Plug>(unite_exit)
 endfunction
+
+" denite
+
+if executable('ag')
+
+    call denite#custom#var('file_rec', 'command',
+                \ ['ag', '--follow', '--nocolor', '--nogroup', '--ignore', 'vendor', '--ignore', '.git', '--ignore', '.bzr', '--ignore', '.hg', '--ignore', '.svn', '--hidden', '-g', ''])
+
+    call denite#custom#var('grep', 'command', ['ag'])
+    call denite#custom#var('grep', 'recursive_opts', [])
+    call denite#custom#var('grep', 'final_opts', [])
+    call denite#custom#var('grep', 'separator', [])
+    call denite#custom#var('grep', 'default_opts',
+                \ ['--smart-case', '--nocolor', '--nogroup', '--ignore', '.git', '--ignore', '.bzr', '--ignore', '.hg', '--ignore', '.svn', '--hidden'])
+
+endif
+
+call denite#custom#source(
+            \ 'file_mru', 'matchers', ['matcher_fuzzy'])
+call denite#custom#source(
+            \ 'file_rec', 'matchers', ['matcher_fuzzy'])
+call denite#custom#source(
+            \ 'file_mru', 'converters', ['converter_relative_word'])
+
+nnoremap <leader>f :Denite file_rec<cr>
+nnoremap <leader>r :Denite file_mru<cr>
+nnoremap <leader>g :Denite grep<cr>
+
+call denite#custom#map('_', "\<C-j>", 'move_to_next_line')
+call denite#custom#map('_', "\<C-k>", 'move_to_prev_line')
 
 "vimfiler
 let g:vimfiler_as_default_explorer = 1
@@ -198,8 +208,8 @@ let g:vim_markdown_folding_level = 3
 syntax on
 set background=dark
 if has("gui_running")
-    colorscheme onedark
-    let g:onedark_nonitalic = 0
+    let g:one_allow_italics = 1
+    colorscheme one
     set guifont=Ubuntu\ Mono\ 14
     set guioptions-=m  "menu bar
     set guioptions-=T  "toolbar
@@ -209,13 +219,15 @@ if has("gui_running")
 " elseif &diff
 "     colorscheme peaksea
 else
-    " let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-    set termguicolors " true colors
-    colorscheme onedark
+    if (has("termguicolors"))
+        set termguicolors " true colors
+    endif
+    let g:one_allow_italics = 1
+    colorscheme one
 endif
 
 " Colorscheme overrides
-hi Comment cterm=italic gui=italic
+" hi Comment cterm=italic gui=italic
 " hi ColorColumn ctermbg=0 guibg=#000000 " used by diminactive
 
 " Set zazen colorscheme for fountain
@@ -231,16 +243,16 @@ hi Comment cterm=italic gui=italic
 
 " Goyo
 function! s:goyo_enter()
+    silent !tmux set status off
     " DisableGoldenViewAutoResize
     set scrolloff=999
     set background=dark
-    " let g:pencil_terminal_italics = 1
-    " colorscheme pencil
     colorscheme gotham
     let g:limelight_conceal_ctermfg = 0
     Limelight
 endfunction
 function! s:goyo_leave()
+    silent !tmux set status on
     EnableGoldenViewAutoResize
     colorscheme onedark
     set scrolloff=2
@@ -260,8 +272,9 @@ let g:jsx_ext_required = 0
 " let g:js_fmt_autosave = 1
 
 " Go
-" use goimports for rewriting import lines
 let g:go_fmt_command = "goimports"
+let g:go_term_enabled = 1
+let g:go_term_mode = "split"
 " vim-go extra mappings
 au FileType go nmap <Leader>gd <Plug>(go-def-vertical)
 au FileType go nmap <leader>gt <Plug>(go-test)
@@ -299,7 +312,7 @@ let g:deoplete#ignore_sources._ = ["neosnippet"]
 " deoplete-go
 let g:deoplete#sources#go = 'vim-go'
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-let g:deoplete#sources#go#gocode_binary = '/Users/saulhoward/go/bin/gocode'
+let g:deoplete#sources#go#gocode_binary = '/home/saul/go/bin/gocode'
 
 " Use partial fuzzy matches like YouCompleteMe
 call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
@@ -348,3 +361,11 @@ let g:rustfmt_autosave = 1
 " let g:pad#window_height=30
 " let g:pad#window_width=50
 " nmap <leader>ll <Plug>(pad-list)
+
+" vim-rooter (cwd)
+let g:rooter_silent_chdir = 1
+
+" tmux
+if has('nvim')
+    nmap <BS> <C-W>h
+endif
