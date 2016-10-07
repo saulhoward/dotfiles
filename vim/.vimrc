@@ -217,7 +217,7 @@ nmap \v :e $MYVIMRC<CR>
 nmap \I :verbose set ai? cin? cink? cino? si? inde? indk? formatoptions?<CR>
 
 "replace all tabs with 4 spaces
-map \ft :%s/	/    /g<CR>
+" map \ft :%s/	/    /g<CR>
 
 " Remove the Windows ^M - when the encodings gets messed up
 noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
