@@ -10,3 +10,4 @@ stow vim
 stow i3
 ...
 ```
+
