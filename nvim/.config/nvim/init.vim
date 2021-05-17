@@ -1,6 +1,10 @@
 scriptencoding utf-8
 source $HOME/.vimrc
+
+let g:polyglot_disabled = ['markdown']
 source $HOME/.config/nvim/plugins.vim
+
+let g:python3_host_prog = "/Users/saulhoward/.pyenv/versions/3.7.9/bin/python3.7"
 
 " # general vim settings
 
@@ -14,7 +18,15 @@ map <C-J> <C-W>j
 map <C-K> <C-W>k
 map <C-L> <C-W>l
 
+" date insert
+nmap <F3> i<C-R>=strftime("%Y/%m/%d %a %I:%M %p")<CR><Esc>
+imap <F3> <C-R>=strftime("%Y/%m/%d %a %I:%M %p")<CR>
+
 " # PLUGIN SETUP
+
+" vim-rooter
+let g:rooter_silent_chdir = 1
+let g:rooter_patterns = ['.git']
 
 " ## goldenview
 let g:goldenview__enable_at_startup=1
@@ -140,8 +152,6 @@ autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-
-
 " Wrap in try/catch to avoid errors on initial install before plugin is available
 try
 
@@ -220,10 +230,9 @@ let g:signify_sign_change            = '•'
 nmap <leader>n :find ~/Dropbox/lists/todo.md<CR>
 
 " markdown
-let g:mkdx#settings     = { 'highlight': { 'enable': 1 },
-            \ 'enter': { 'shift': 1 },
-            \  }
-let g:polyglot_disabled = ['markdown']
+" let g:mkdx#settings     = { 'highlight': { 'enable': 1 },
+"             \ 'enter': { 'shift': 1 },
+"             \  }
 
 " # colors
 
@@ -306,3 +315,11 @@ let g:ale_fixers = {
 \   'python': ['black'],
 \}
 let g:ale_fix_on_save = 1
+
+" vista
+let g:vista_icon_indent = ["▸ ", ""]
+let g:vista_default_executive = 'coc'
+nnoremap <leader>o :Vista!!<cr>
+
+" markdown mxdx
+" let g:mkdx#settings = { 'enter': { 'enable': 1 } }

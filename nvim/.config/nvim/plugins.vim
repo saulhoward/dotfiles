@@ -22,9 +22,13 @@ Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
 
+" ## markdown
+Plug 'SidOfc/mkdx' " has to come before polyglot
+
 " ## Code
 Plug 'dense-analysis/ale'
 Plug 'sbdchd/neoformat'
+Plug 'liuchengxu/vista.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'fatih/vim-go', {'for': 'go', 'do': ':GoUpdateBinaries' }
@@ -34,9 +38,6 @@ Plug 'othree/javascript-libraries-syntax.vim'
 Plug 'ap/vim-css-color', {'for': 'css'}
 " Plug 'rust-lang/rust.vim', {'for': 'rust'}
 " Plug 'othree/yajs.vim'
-
-" ## markdown
-Plug 'SidOfc/mkdx'
 
 " ## grep
 if executable('rg')
@@ -56,7 +57,8 @@ Plug 'junegunn/limelight.vim'
 Plug 'reedes/vim-pencil'
 
 " ## layout
-Plug 'zhaocai/GoldenView.Vim'
+Plug 'RobertAudi/GoldenView.vim'
+Plug 'dstein64/vim-win'
 
 " ## colors
 Plug 'drewtempelmeyer/palenight.vim'
