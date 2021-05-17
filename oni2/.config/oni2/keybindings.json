@@ -1,0 +1,19 @@
+
+[
+  // See the onivim documentation for details on the format:
+  // https://onivim.github.io/docs/configuration/key-bindings
+  // Add key bindings here, for example:
+  // { "key": "<TAB>", "command": "workbench.action.quickOpen", "when": "editorTextFocus" },
+  // { "key": "jk", "command": "vim.esc", "when": "insertMode" },
+  { "key": "<C-h>", "command": "window.moveLeft", "when": "normalMode" },
+  { "key": "<C-l>", "command": "window.moveRight", "when": "normalMode" },
+  { "key": "<C-k>", "command": "window.moveUp", "when": "normalMode" },
+  { "key": "<C-j>", "command": "window.moveDown", "when": "normalMode" },
+  { "key": "<Leader>p", "command": "workbench.actions.view.problems", "when": "normalMode" },
+  { "key": "<Leader>f", "command": "workbench.action.quickOpen", "when": "normalMode" },
+  { "key": "<Leader>g", "command": "workbench.action.findInFiles", "when": "normalMode" },
+  { "key": "<Leader>v", "command": "view.splitVertical", "when": "normalMode" },
+  { "key": "<Leader>s", "command": "view.splitHorizontal", "when": "normalMode" },
+  { "key": "<C-j>", "command": "list.focusDown", "when": "listFocus || suggestWidgetVisible || vimListNavigation" },
+  { "key": "<C-k>", "command": "list.focusUp", "when": "listFocus || suggestWidgetVisible || vimListNavigation" },
+]
