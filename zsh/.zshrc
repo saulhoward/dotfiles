@@ -1,4 +1,5 @@
 ###
+#
 # .zshrc saulhoward.com
 ###
 
@@ -20,7 +21,7 @@ promptinit
 
 # colours
 autoload -U colors && colors
-PROMPT="%{$fg[red]%}%n@%m %{$fg[yellow]%}>> %{$reset_color%}"
+PROMPT="%{$fg[magenta]%}%n@%m %{$fg[yellow]%}>> %{$reset_color%}"
 RPROMPT=" %{$fg[blue]%}%~%{$reset_color%}"
 
 # window title
@@ -33,7 +34,9 @@ function precmd () {
 # vim / neovim
 export EDITOR=vim
 export VISUAL=vim
-alias vim=nvim
+alias vim=~/.local/bin/lvim
+export LUNARVIM_CONFIG_DIR="${HOME}/.config/lvim"
+export PATH="${HOME}/bin:${PATH}"
 
 # ls alias
 alias ls='ls --group-directories-first --time-style=+"%d.%m.%Y %H:%M" --color=auto'
@@ -50,7 +53,7 @@ eval "$(pyenv virtualenv-init -)"
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:$GOROOT/bin
-export GOPRIVATE="github.com/saulhoward"
+export GOPRIVATE="github.com/saulhoward/*,github.com/deepdrama/*"
 
 # ANTLR
 export CLASSPATH=".:/usr/local/lib/antlr-4.7.1-complete.jar:$CLASSPATH"
@@ -61,7 +64,22 @@ alias grun='java -Xmx500M -cp "/usr/local/lib/antlr-4.7.1-complete.jar:$CLASSPAT
 export PATH="${HOME}/.please/bin:${PATH}"
 source <(plz --completion_script)
 
-# GCP
-if [ -f '/Users/saul/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/saul/google-cloud-sdk/path.zsh.inc'; fi
-if [ -f '/Users/saul/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/saul/google-cloud-sdk/completion.zsh.inc'; fi
+alias ta='tmux attach-session -t'
 
+# GCP
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
+export GOOGLE_APPLICATION_CREDENTIALS="$HOME/src/deepdrama/secrets/gcp-service-account.json"
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/saul/google-cloud-sdk/path.zsh.inc' ]; then . '/home/saul/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/saul/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/saul/google-cloud-sdk/completion.zsh.inc'; fi
+
+export DEEPDRAMA_APP_CONFIG=/home/saul/src/deepdrama/etc/deepdrama.dev-saul.toml
+
+# RUN THIS: npm config set prefix ~/.npm
+export NPM_HOME="${HOME}/.npm"
+export PATH="$PATH:$HOME/.npm/bin"
