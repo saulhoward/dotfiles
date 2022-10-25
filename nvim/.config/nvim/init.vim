@@ -3,7 +3,7 @@ source $HOME/.vimrc
 
 " # PLUGINS
 call plug#begin('~/.config/nvim/plugged')
-Plug 'tomtom/tcomment_vim'
+Plug 'numToStr/Comment.nvim'
 Plug 'editorconfig/editorconfig-vim'
 call plug#end()
 
@@ -17,3 +17,4 @@ map <C-J> <C-W>j
 map <C-K> <C-W>k
 map <C-L> <C-W>l
 
+lua require('Comment').setup()
