@@ -3,7 +3,7 @@ source $HOME/.vimrc
 
 " # PLUGINS
 call plug#begin('~/.config/nvim/plugged')
-Plug 'numToStr/Comment.nvim'
+" Plug 'numToStr/Comment.nvim', Cond(!exists('g:vscode'))
 Plug 'editorconfig/editorconfig-vim'
 call plug#end()
 
@@ -17,4 +17,13 @@ map <C-J> <C-W>j
 map <C-K> <C-W>k
 map <C-L> <C-W>l
 
-lua require('Comment').setup()
+
+if exists('g:vscode')
+  xmap gc VSCodeCommentary
+  nmap gc VSCodeCommentary
+  omap gc VSCodeCommentary
+  nmap gcc VSCodeCommentaryLine
+else
+  " lua require('Comment').setup()
+endif
+
