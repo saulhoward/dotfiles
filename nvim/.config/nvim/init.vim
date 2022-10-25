@@ -19,10 +19,10 @@ map <C-L> <C-W>l
 
 
 if exists('g:vscode')
-  xmap gc VSCodeCommentary
-  nmap gc VSCodeCommentary
-  omap gc VSCodeCommentary
-  nmap gcc VSCodeCommentaryLine
+  xmap gc  <Plug>VSCodeCommentary
+  nmap gc  <Plug>VSCodeCommentary
+  omap gc  <Plug>VSCodeCommentary
+  nmap gcc <Plug>VSCodeCommentaryLine
 else
   " lua require('Comment').setup()
 endif
