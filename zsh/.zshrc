@@ -21,7 +21,7 @@ promptinit
 
 # colours
 autoload -U colors && colors
-PROMPT="%{$fg[magenta]%}%n@%m %{$fg[yellow]%}>> %{$reset_color%}"
+PROMPT="%{$fg[cyan]%}%n@%m %{$fg[yellow]%}>> %{$reset_color%}"
 RPROMPT=" %{$fg[blue]%}%~%{$reset_color%}"
 
 # window title
@@ -64,13 +64,20 @@ alias grun='java -Xmx500M -cp "/usr/local/lib/antlr-4.7.1-complete.jar:$CLASSPAT
 export PATH="${HOME}/.please/bin:${PATH}"
 source <(plz --completion_script)
 
-alias ta='tmux attach-session -t'
+# tmux
+alias ta='tmux new-session -A -s'
 
 # GCP
 if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
 if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
-export GOOGLE_APPLICATION_CREDENTIALS="$HOME/src/deepdrama/secrets/gcp-service-account.json"
+export GOOGLE_APPLICATION_CREDENTIALS="$HOME/src/deepdrama/ddsecrets/gcp-service-account.json"
 
+
+export DEEPDRAMA_APP_CONFIG=/home/saul/src/deepdrama/etc/deepdrama.dev-saul.toml
+
+# RUN THIS: npm config set prefix ~/.npm
+export NPM_HOME="${HOME}/.npm"
+export PATH="$PATH:$HOME/.npm/bin"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/saul/google-cloud-sdk/path.zsh.inc' ]; then . '/home/saul/google-cloud-sdk/path.zsh.inc'; fi
@@ -78,8 +85,6 @@ if [ -f '/home/saul/google-cloud-sdk/path.zsh.inc' ]; then . '/home/saul/google-
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/saul/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/saul/google-cloud-sdk/completion.zsh.inc'; fi
 
-export DEEPDRAMA_APP_CONFIG=/home/saul/src/deepdrama/etc/deepdrama.dev-saul.toml
-
-# RUN THIS: npm config set prefix ~/.npm
-export NPM_HOME="${HOME}/.npm"
-export PATH="$PATH:$HOME/.npm/bin"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
