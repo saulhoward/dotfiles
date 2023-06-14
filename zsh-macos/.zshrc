@@ -83,3 +83,8 @@ export NVM_DIR="$HOME/.nvm"
 # kubectl
 [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
 
+# tmux
+alias ta='tmux new-session -A -s'
+
+# emacs
+export PATH="$PATH:${HOME}/.config/emacs/bin"
