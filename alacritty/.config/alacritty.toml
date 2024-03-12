@@ -319,6 +319,7 @@ decorations_theme_variant = "Dark"
 option_as_alt = "Both"
 dynamic_padding = false
 opacity = 1
+dynamic_title = true
 
 [window.padding]
 x = 2
