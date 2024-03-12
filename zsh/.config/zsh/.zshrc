@@ -1,8 +1,5 @@
 # colors
 autoload -U colors && colors
-# PS1="%B%{$fg[magenta]%}➜ %{$fg[yellow]%}[%{$fg[blue]%}%c%{$fg[yellow]%}] %{$fg[magenta]%}✗%{$reset_color%}%b "
-# PS1="%B%{$fg[magenta]%}➜  %{$fg[blue]%}%c%{$fg[magenta]%} ✗%{$reset_color%}%b "
-# PS1=" %B%{$fg[blue]%}%c %{$fg[yellow]%}>%{$fg[red]%}>%{$fg[magenta]%}>%{$reset_color%}%b "
 autoload -Uz vcs_info
 precmd() { vcs_info }
 
@@ -10,7 +7,7 @@ precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats ' %b'
 setopt PROMPT_SUBST
 if [[ ${SSH_TTY} ]] ; then
-    PROMPT='%B%{$fg[blue]%}%n@%m %c %{$fg[yellow]%}>%{$fg[red]%}>%{$fg[magenta]%}>%{$fg[cyan]%}${vcs_info_msg_0_}%b '
+    PROMPT='%B%{$fg[yellow]%}%n@%m %{$fg[blue]%}%c %{$fg[yellow]%}>%{$fg[red]%}>%{$fg[magenta]%}>%{$fg[cyan]%}${vcs_info_msg_0_}%b '
 else
     PROMPT='%B%{$fg[blue]%}%c %{$fg[yellow]%}>%{$fg[red]%}>%{$fg[magenta]%}>%{$fg[cyan]%}${vcs_info_msg_0_}%b '
 fi
