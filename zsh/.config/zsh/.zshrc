@@ -9,7 +9,11 @@ precmd() { vcs_info }
 # Format the vcs_info_msg_0_ variable
 zstyle ':vcs_info:git:*' formats ' %b'
 setopt PROMPT_SUBST
-PROMPT=' %B%{$fg[blue]%}%c %{$fg[yellow]%}>%{$fg[red]%}>%{$fg[magenta]%}>%{$fg[cyan]%}${vcs_info_msg_0_}%b '
+if [[ ${SSH_TTY} ]] ; then
+    PROMPT='%B%{$fg[blue]%}%n@%m %c %{$fg[yellow]%}>%{$fg[red]%}>%{$fg[magenta]%}>%{$fg[cyan]%}${vcs_info_msg_0_}%b '
+else
+    PROMPT='%B%{$fg[blue]%}%c %{$fg[yellow]%}>%{$fg[red]%}>%{$fg[magenta]%}>%{$fg[cyan]%}${vcs_info_msg_0_}%b '
+fi
 ZSH_THEME_GIT_PROMPT_PREFIX=" on %{$fg[magenta]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[green]%}!"
