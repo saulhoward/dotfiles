@@ -1,0 +1,20 @@
+{
+  "theme": "Vesper",
+  "buffer_font_size": 15,
+  "buffer_font_family": "Berkeley Mono Variable",
+  "buffer_line_height": "standard",
+  "vim_mode": true,
+  "language_overrides": {
+    "Go": {
+      "formatter": {
+        "external": {
+          "command": "goimports",
+          "arguments": []
+        }
+      }
+    }
+  },
+  "project_panel": {
+    "dock": "right"
+  }
+}
