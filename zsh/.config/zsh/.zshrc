@@ -9,7 +9,7 @@ setopt PROMPT_SUBST
 function () {
   local prompt_base='%b%{$fg[yellow]%}%c%{$fg[white]%}${vcs_info_msg_0_} %B%{$fg[green]%}$%b '
   if [[ ${SSH_TTY} ]] ; then
-      PROMPT='%B%{$fg[magenta]%}%n@%m ${prompt_base}'
+      PROMPT='%B%{$fg[magenta]%}%n@%m '$prompt_base
   else
       PROMPT=$prompt_base
   fi
