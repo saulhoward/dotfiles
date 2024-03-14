@@ -106,13 +106,15 @@ alias stat='git status'  # 'status' is protected name so using 'stat' instead
 alias tag='git tag'
 alias newtag='git tag -a'
 
-
 alias vim='nvim'
 export EDITOR='nvim'
 export VISUAL='nvim'
 
 # for cp
 ulimit -s unlimited
+
+# homebrew
+export PATH="/opt/homebrew/bin:$PATH"    # if `pyenv` is not already on PATH
 
 # fuck
 eval $(thefuck --alias)

@@ -9,3 +9,4 @@ tmp/
 .zcompcache/
 __pycache__/
 tmux/.config/tmux/plugins
+lazy-lock.json
