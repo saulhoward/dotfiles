@@ -166,6 +166,6 @@ export NVM_DIR="$HOME/.nvm"
 
 if [[ $(uname) == "Darwin" ]]; then
     source "$HOME/.config/zsh/macos.zsh"
-else:
+else
     export PATH="$PATH:/opt/nvim-linux64/bin"
 fi
