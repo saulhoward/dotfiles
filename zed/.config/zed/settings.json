@@ -3,6 +3,7 @@
   "buffer_font_size": 15,
   "buffer_font_family": "Berkeley Mono Variable",
   "buffer_line_height": "standard",
+  "ui_font_family": "Berkeley Mono Variable",
   "vim_mode": true,
   "language_overrides": {
     "Go": {
