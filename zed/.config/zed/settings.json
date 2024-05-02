@@ -1,5 +1,5 @@
 {
-  "theme": "Night Owl No Italics",
+  "theme": "Vesper",
   "buffer_font_size": 15,
   "buffer_font_family": "Berkeley Mono Variable",
   "buffer_line_height": "standard",
@@ -17,5 +17,6 @@
   },
   "project_panel": {
     "dock": "right"
-  }
+  },
+  "git": { "inline_blame": { "min_column": 80 } }
 }
