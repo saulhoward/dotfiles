@@ -174,3 +174,4 @@ fi
 export DOTNET_ROOT=$HOME/usr/local/share/dotnet
 export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
 
+fastfetch
