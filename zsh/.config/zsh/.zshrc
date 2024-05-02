@@ -169,3 +169,8 @@ if [[ $(uname) == "Darwin" ]]; then
 else
     export PATH="$PATH:/opt/nvim-linux64/bin"
 fi
+
+# dotnet
+export DOTNET_ROOT=$HOME/usr/local/share/dotnet
+export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
+
