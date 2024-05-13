@@ -117,6 +117,9 @@ export VISUAL='nvim'
 # for cp
 ulimit -s unlimited
 
+export PATH="$PATH:$HOME/bin"
+source <(ddctl completion zsh)
+
 # homebrew
 export PATH="/opt/homebrew/bin:$PATH"    # if `pyenv` is not already on PATH
 

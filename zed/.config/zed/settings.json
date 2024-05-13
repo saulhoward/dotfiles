@@ -5,6 +5,10 @@
   "buffer_line_height": "standard",
   "ui_font_family": "Berkeley Mono Variable",
   "vim_mode": true,
+  "project_panel": {
+    "dock": "right"
+  },
+  "git": { "inline_blame": { "min_column": 80 } },
   "language_overrides": {
     "Go": {
       "formatter": {
@@ -13,10 +17,18 @@
           "arguments": []
         }
       }
+    },
+    "Python": {
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "bash",
+          "arguments": [
+            "-c",
+            "ruff check --select=I --fix --stdin-filename {buffer_path} | ruff format --stdin-filename {buffer_path}"
+          ]
+        }
+      }
     }
-  },
-  "project_panel": {
-    "dock": "right"
-  },
-  "git": { "inline_blame": { "min_column": 80 } }
+  }
 }
