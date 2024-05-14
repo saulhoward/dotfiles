@@ -1,4 +1,7 @@
 {
+  "features": {
+    "copilot": false
+  },
   "theme": "Vesper",
   "experimental.theme_overrides": {
     "surface.background": "#1F212B",
