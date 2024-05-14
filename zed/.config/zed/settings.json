@@ -1,5 +1,11 @@
 {
   "theme": "Vesper",
+  "experimental.theme_overrides": {
+    "surface.background": "#1F212B",
+    "background": "#1F212B",
+    "element.background": "#1F212B",
+    "editor.background": "#1F212B"
+  },
   "buffer_font_size": 15,
   "buffer_font_family": "Berkeley Mono Variable",
   "buffer_line_height": "standard",
