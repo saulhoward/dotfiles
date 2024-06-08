@@ -14,6 +14,7 @@
   "modules": [
     "title",
     "separator",
+    "os",
     "memory",
     "swap",
     "disk",
