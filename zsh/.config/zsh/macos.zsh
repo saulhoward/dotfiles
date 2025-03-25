@@ -9,3 +9,8 @@ source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
+eval "$(direnv hook zsh)"
+
+
+## ant
+# export PATH=$PATH:~/src/platform/bin
