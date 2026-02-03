@@ -15,6 +15,16 @@ function () {
   fi
 }
 
+# nix shell
+if [[ -n "$IN_NIX_SHELL" ]]; then
+  label="nix-shell"
+  if [[ "$name" != "$label" ]]; then
+    label="$label:$name"
+  fi
+  export PS1=$'%{$fg[green]%}'"$label $PS1"
+  unset label
+fi
+
 ZSH_THEME_GIT_PROMPT_PREFIX=" on %{$fg[magenta]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[green]%}!"
@@ -118,7 +128,7 @@ export VISUAL='nvim'
 ulimit -s unlimited
 
 export PATH="$PATH:$HOME/bin"
-source <(ddctl completion zsh)
+# source <(ddctl completion zsh)
 
 # homebrew
 export PATH="/opt/homebrew/bin:$PATH"    # if `pyenv` is not already on PATH
@@ -133,11 +143,11 @@ export FZF_DEFAULT_OPTS='--color=bg+:#292e42,bg:#16161e,border:#1f2335,hl:#ff9e6
 # export FZF_DEFAULT_OPTS='--color=bg+:#c4c8da,bg:#e9e9ec,border:#e9e9ec,hl:#b15c00,fg:#6172b0,header:#c4c8da,pointer:#9854f1,fg+:#6172b0,preview-bg:#e1e2e7,prompt:#007197,hl+:#2e7de9,info:#8c6c3e'
 
 # pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"    # if `pyenv` is not already on PATH
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# export PYENV_ROOT="$HOME/.pyenv"
+# export PATH="$PYENV_ROOT/bin:$PATH"    # if `pyenv` is not already on PATH
+# eval "$(pyenv init --path)"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
 
 # go
 export GOPATH=$HOME/go
@@ -163,9 +173,12 @@ export GOOGLE_APPLICATION_CREDENTIALS="$HOME/src/deepdrama/ddsecrets/gcp-service
 # RUN THIS: npm config set prefix ~/.npm
 export NPM_HOME="${HOME}/.npm"
 export PATH="$PATH:$HOME/.npm/bin"
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 if [[ $(uname) == "Darwin" ]]; then
     source "$HOME/.config/zsh/macos.zsh"

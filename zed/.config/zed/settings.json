@@ -1,7 +1,9 @@
 {
+  "icon_theme": "Zed (Default)",
   "features": {
-    "edit_prediction_provider": "zed"
+    "edit_prediction_provider": "zed",
   },
+  "edit_predictions": { "mode": "subtle" },
   "theme": "Vesper",
   "experimental.theme_overrides": {
     "surface.background": "#12141a",
@@ -9,9 +11,9 @@
     "element.background": "#12141a",
     "editor.background": "#12141a",
     "editor.wrap_guide": "#1F212B",
-    "editor.active_wrap_guide": "#101010"
+    "editor.active_wrap_guide": "#101010",
   },
-  "max_tabs": 5,
+  "max_tabs": 7,
   "show_wrap_guides": true,
   "wrap_guides": [80],
   "buffer_font_size": null,
@@ -21,33 +23,33 @@
   "vim_mode": true,
   "project_panel": {
     "dock": "right",
-    "indent_size": 10
+    "indent_size": 8,
+    "file_icons": false,
+    "folder_icons": false,
   },
   "unstable.ui_density": "compact",
   "git": {
     "inline_blame": {
-      "min_column": 80
-    }
-  },
-  "assistant": {
-    "default_model": {
-      "provider": "zed.dev",
-      "model": "claude-3-5-sonnet-latest"
+      "min_column": 80,
     },
-    "version": "2",
-    "dock": "left"
+  },
+  "agent": {
+    "default_model": {
+      "provider": "openai",
+      "model": "gpt-5",
+    },
+    "model_parameters": [],
   },
   "prettier": {
     "allowed": true,
     "plugins": [
       "prettier-plugin-organize-imports",
       "prettier-plugin-tailwindcss",
-      "prettier-plugin-svelte"
-    ]
+      "prettier-plugin-svelte",
+    ],
   },
   "lsp": {
     "gopls": {
-      "gofumpt": true,
       "initialization_options": {
         "directoryFilters": ["-**/node_modules", "-**/.git"],
         "gofumpt": true,
@@ -60,56 +62,55 @@
           "unusedparams": true,
           "unusedvariable": true,
           "unusedwrite": true,
-          "useany": true
+          "useany": true,
         },
         "codelenses": {
-          "gc_details": true
-        }
-      }
+          "gc_details": true,
+        },
+      },
     },
     "yaml-language-server": {
       "initialization_options": {
         "yaml": {
           "completion": false,
           "format": {
-            "enable": false
-          }
-        }
-      }
+            "enable": false,
+          },
+        },
+      },
     },
-    "pyright": {
+    "eslint": {
       "settings": {
-        "python": {
-          // "pythonPath": "/Users/saul/src/platform/workflows/.direnv/python-3.12/bin/python"
-          "pythonPath": "/Users/saul/src/platform/services/prior-auth-op/.direnv/python-3.12/bin/python"
-        }
-      }
-    }
+        "workingDirectory": {
+          "mode": "auto",
+        },
+      },
+    },
   },
   "languages": {
     "Go": {
       "format_on_save": "on",
-      "formatter": "language_server"
+      "formatter": "language_server",
     },
     "Python": {
-      "show_inline_completions": true,
+      "show_edit_predictions": true,
       "language_servers": ["pyright", "ruff"],
       "formatter": [
         {
-          "code_actions": {
-            "source.organizeImports.ruff": true,
-            "source.fixAll.ruff": true
-          }
+          "code_action": "source.organizeImports.ruff",
+        },
+        {
+          "code_action": "source.fixAll.ruff",
         },
         {
           "language_server": {
-            "name": "ruff"
-          }
-        }
-      ]
+            "name": "ruff",
+          },
+        },
+      ],
     },
     "Markdown": {
-      "show_inline_completions": false,
+      "show_edit_predictions": false,
       "soft_wrap": "preferred_line_length",
       "format_on_save": "off",
       "formatter": {
@@ -120,13 +121,13 @@
             "--prose-wrap",
             "always",
             "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
-      }
+            "{buffer_path}",
+          ],
+        },
+      },
     },
     "YAML": {
-      "formatter": "language_server"
-    }
-  }
+      "formatter": "language_server",
+    },
+  },
 }

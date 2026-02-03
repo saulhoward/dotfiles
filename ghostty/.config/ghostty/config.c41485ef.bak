@@ -1,0 +1,11 @@
+theme = vesper
+font-family = "TX-02 SemiCondensed"
+font-size = 16.5
+font-thicken = true
+window-colorspace = display-p3
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
+quick-terminal-animation-duration = 0.1
+background-opacity = 0.93
+selection-foreground = #FFFFFF
+selection-background = #ff79c6
+background-blur-radius = 20
