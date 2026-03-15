@@ -4,9 +4,9 @@
     "type": "auto",
   },
   "display": {
-    "keyWidth": 11,
+    "key":{"width": 11},
     "bar": {
-      "charElapsed": "=",
+      "char": {"elapsed": "="},
       "charTotal": "-",
       "width": 13,
     },

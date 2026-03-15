@@ -1,9 +1,11 @@
 {
-  "icon_theme": "Zed (Default)",
-  "features": {
-    "edit_prediction_provider": "zed",
+  "agent_servers": {
+    "claude-acp": {
+      "type": "registry",
+    },
   },
-  "edit_predictions": { "mode": "subtle" },
+  "icon_theme": "Zed (Default)",
+  "edit_predictions": { "provider": "zed", "mode": "subtle" },
   "theme": "Vesper",
   "experimental.theme_overrides": {
     "surface.background": "#12141a",
@@ -36,7 +38,7 @@
   "agent": {
     "default_model": {
       "provider": "openai",
-      "model": "gpt-5",
+      "model": "gpt-5.2-codex",
     },
     "model_parameters": [],
   },
