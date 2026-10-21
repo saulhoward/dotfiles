@@ -24,10 +24,10 @@
   "ui_font_family": "TX-02 Condensed",
   "vim_mode": true,
   "project_panel": {
+    "folder_indicator": "chevron",
     "dock": "right",
     "indent_size": 8,
     "file_icons": false,
-    "folder_icons": false,
   },
   "unstable.ui_density": "compact",
   "git": {
