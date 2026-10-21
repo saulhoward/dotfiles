@@ -1,0 +1,5 @@
+# nix-direnv: fast, cached `use flake` / `use nix` in .envrc files
+for f in "$HOME/.nix-profile/share/nix-direnv/direnvrc" \
+         "$HOME/.local/state/nix/profile/share/nix-direnv/direnvrc"; do
+  [[ -f $f ]] && source "$f" && break
+done

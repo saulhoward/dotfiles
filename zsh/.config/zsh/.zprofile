@@ -10,6 +10,11 @@ elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
 fi
 
+# nix (sets NIX_* env vars; PATH order is fixed below)
+if [[ -r /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
 export EDITOR='nvim'
 export VISUAL='nvim'
 
@@ -17,17 +22,18 @@ export VISUAL='nvim'
 export GOPATH="$HOME/go"
 export GOPRIVATE="github.com/saulhoward/*"
 
-# npm
-# RUN THIS: npm config set prefix ~/.npm
-export NPM_HOME="${HOME}/.npm"
+# npm: global installs go here (the nix store is read-only)
+export NPM_CONFIG_PREFIX="$HOME/.local/share/npm"
 
 path=(
     $HOME/.local/bin
     $HOME/bin
     $HOME/.cargo/bin
+    $HOME/.nix-profile/bin
+    $HOME/.local/state/nix/profile/bin
+    /nix/var/nix/profiles/default/bin
     $path
     $GOPATH/bin
-    $HOME/.npm/bin
-    /opt/nvim-linux64/bin
+    $NPM_CONFIG_PREFIX/bin
 )
 path=($^path(N-/))  # drop entries that don't exist on this machine

@@ -8,9 +8,15 @@ tmp/
 .zcompdump
 .zcompcache/
 __pycache__/
-tmux/.config/tmux/plugins
 lazy-lock.json
 .zprofile
 !zsh/.config/zsh/.zprofile
 zsh/.config/zsh/local.zsh
 zed/.config/zed/prompts/
+# app-generated backups
+*.bak
+zed/.config/zed/settings_backup.json
+# Zed's agent installs npm packages into the open project
+/node_modules/
+/package.json
+/package-lock.json
