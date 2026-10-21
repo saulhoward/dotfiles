@@ -26,6 +26,15 @@
             neovim
             tree-sitter
 
+            # git
+            difftastic
+            lazygit
+            mergiraf
+
+            # utils
+            tree
+            wget
+
             # languages (per-project versions: `use flake` in .envrc)
             go
             nodejs

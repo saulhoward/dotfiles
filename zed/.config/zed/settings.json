@@ -130,8 +130,9 @@
       "format_on_save": "off",
       "formatter": {
         "external": {
-          "command": "bunx",
+          "command": "npx",
           "arguments": [
+            "--yes",
             "prettier",
             "--prose-wrap",
             "always",
