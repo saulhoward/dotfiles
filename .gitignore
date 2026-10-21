@@ -11,3 +11,6 @@ __pycache__/
 tmux/.config/tmux/plugins
 lazy-lock.json
 .zprofile
+!zsh/.config/zsh/.zprofile
+zsh/.config/zsh/local.zsh
+zed/.config/zed/prompts/

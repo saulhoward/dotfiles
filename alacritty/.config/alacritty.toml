@@ -310,7 +310,7 @@ multiplier = 3
 semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 
 [shell]
-args = ["-l", "-c", "source ~/.config/zsh/.zshrc; ~/.scripts/tmux-sessionizer"]
+args = ["-l"]
 program = "/bin/zsh"
 
 [window]
