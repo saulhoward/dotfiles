@@ -1,8 +1,13 @@
 {
-  "agent_servers": {
-    "claude-acp": {
-      "type": "registry",
-    },
+  "ui_font_size": 13.0,
+  "outline_panel": {
+    "dock": "right"
+  },
+  "collaboration_panel": {
+    "dock": "right"
+  },
+  "git_panel": {
+    "dock": "right"
   },
   "icon_theme": "Zed (Default)",
   "edit_predictions": { "provider": "zed", "mode": "subtle" },
@@ -18,7 +23,7 @@
   "max_tabs": 7,
   "show_wrap_guides": true,
   "wrap_guides": [80],
-  "buffer_font_size": null,
+  "buffer_font_size": 13.0,
   "buffer_font_family": "TX-02 SemiCondensed",
   "buffer_line_height": "standard",
   "ui_font_family": "TX-02 Condensed",
@@ -35,13 +40,6 @@
       "min_column": 80,
     },
   },
-  "agent": {
-    "default_model": {
-      "provider": "openai",
-      "model": "gpt-5.2-codex",
-    },
-    "model_parameters": [],
-  },
   "prettier": {
     "allowed": true,
     "plugins": [
@@ -51,6 +49,21 @@
     ],
   },
   "lsp": {
+    "vtsls": {
+      "settings": {
+        "typescript": {
+          "updateImportsOnFileMove": {
+            "enabled": "never"
+          }
+        },
+        "javascript": {
+          "updateImportsOnFileMove": {
+            "enabled": "never"
+          }
+        }
+      },
+      "enable_lsp_tasks": true
+    },
     "gopls": {
       "initialization_options": {
         "directoryFilters": ["-**/node_modules", "-**/.git"],

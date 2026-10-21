@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+"""Git clean/smudge filter that keeps private keys out of the committed Zed settings.
+
+  clean:  strip PRIVATE_KEYS from settings.json (stdin -> stdout), saving them to PRIVATE_FILE
+  smudge: re-insert the saved keys from PRIVATE_FILE on checkout
+
+Works on the raw JSONC text, so comments, trailing commas and formatting are preserved.
+"""
+
+import os
+import sys
+
+PRIVATE_KEYS = {"agent", "agent_servers", "language_models", "context_servers"}
+PRIVATE_FILE = os.path.expanduser("~/.config/zed/settings.private.jsonc")
+
+
+def skip_ws(s, i):
+    """Skip whitespace and comments."""
+    while i < len(s):
+        if s[i].isspace():
+            i += 1
+        elif s.startswith("//", i):
+            j = s.find("\n", i)
+            i = len(s) if j == -1 else j
+        elif s.startswith("/*", i):
+            j = s.find("*/", i + 2)
+            i = len(s) if j == -1 else j + 2
+        else:
+            break
+    return i
+
+
+def end_of_string(s, i):
+    """i points at an opening quote; return the index just past the closing quote."""
+    i += 1
+    while s[i] != '"':
+        i += 2 if s[i] == "\\" else 1
+    return i + 1
+
+
+def end_of_value(s, i):
+    """Return the index just past the JSON value starting at i."""
+    if s[i] == '"':
+        return end_of_string(s, i)
+    if s[i] in "{[":
+        depth = 0
+        while True:
+            i = skip_ws(s, i)
+            c = s[i]
+            if c == '"':
+                i = end_of_string(s, i)
+                continue
+            if c in "{[":
+                depth += 1
+            elif c in "}]":
+                depth -= 1
+                if depth == 0:
+                    return i + 1
+            i += 1
+    while i < len(s) and s[i] not in ",}] \t\r\n/":
+        i += 1
+    return i
+
+
+def top_level_members(s):
+    """Yield (key, key_start, value_end, comma_end_or_None, prev_token_end) for the root object."""
+    i = skip_ws(s, 0)
+    assert s[i] == "{", "settings.json must be an object"
+    prev_end = i + 1
+    i = skip_ws(s, prev_end)
+    while s[i] != "}":
+        key_start = i
+        key_end = end_of_string(s, i)
+        key = s[key_start + 1 : key_end - 1]
+        i = skip_ws(s, key_end)
+        assert s[i] == ":"
+        value_end = end_of_value(s, skip_ws(s, i + 1))
+        i = skip_ws(s, value_end)
+        comma_end = None
+        if s[i] == ",":
+            comma_end = i + 1
+            i = skip_ws(s, comma_end)
+        yield key, key_start, value_end, comma_end, prev_end
+        prev_end = comma_end if comma_end is not None else value_end
+
+
+def clean(s):
+    cuts = []
+    for key, key_start, value_end, comma_end, prev_end in top_level_members(s):
+        if key not in PRIVATE_KEYS:
+            continue
+        # Take the whitespace before the member and its trailing comma, so that
+        # smudge can put back exactly the same text.
+        # (If there's a comment before the member, leave it behind.)
+        ws_start = prev_end if s[prev_end:key_start].strip() == "" else key_start
+        end = comma_end if comma_end is not None else value_end
+        cuts.append((ws_start, end, comma_end is not None))
+    if not cuts:
+        return s, ""
+    saved = []
+    for start, end, has_comma in cuts:
+        text = s[start:end]
+        saved.append(text if has_comma else text + ",")
+    out = []
+    pos = 0
+    for start, end, _ in cuts:
+        out.append(s[pos:start])
+        pos = end
+    out.append(s[pos:])
+    return "".join(out), "".join(saved)
+
+
+def smudge(s):
+    if not os.path.exists(PRIVATE_FILE):
+        return s
+    with open(PRIVATE_FILE) as f:
+        private = f.read()
+    if not private.strip():
+        return s
+    if any(k in PRIVATE_KEYS for k, *_ in top_level_members(s)):
+        return s
+    i = skip_ws(s, 0) + 1
+    return s[:i] + private + s[i:]
+
+
+def main():
+    mode = sys.argv[1]
+    s = sys.stdin.read()
+    if mode == "clean":
+        out, private = clean(s)
+        if private:
+            os.makedirs(os.path.dirname(PRIVATE_FILE), exist_ok=True)
+            with open(PRIVATE_FILE, "w") as f:
+                f.write(private)
+            os.chmod(PRIVATE_FILE, 0o600)
+        sys.stdout.write(out)
+    elif mode == "smudge":
+        sys.stdout.write(smudge(s))
+    else:
+        sys.exit(f"usage: {sys.argv[0]} clean|smudge")
+
+
+if __name__ == "__main__":
+    main()
