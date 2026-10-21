@@ -1,5 +1,5 @@
 # Copy to local.zsh (untracked) for machine-specific config. Sourced last.
+# This repo is public: keep work details, credentials and private paths in local.zsh.
 
-# deepdrama
-export GOPRIVATE="github.com/saulhoward/*,github.com/deepdrama/*"
-export GOOGLE_APPLICATION_CREDENTIALS="$HOME/src/deepdrama/ddsecrets/gcp-service-account.json"
+# export GOPRIVATE="github.com/saulhoward/*,github.com/<org>/*"
+# export GOOGLE_APPLICATION_CREDENTIALS="$HOME/path/to/service-account.json"
