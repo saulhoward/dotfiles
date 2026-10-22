@@ -38,6 +38,7 @@
             # languages (per-project versions: `use flake` in .envrc)
             go
             nodejs
+            uv
           ]
           # GNU coreutils as g-prefixed commands (gls etc.), leaving macOS's BSD ones alone
           ++ pkgs.lib.optional pkgs.stdenv.hostPlatform.isDarwin coreutils-prefixed;
