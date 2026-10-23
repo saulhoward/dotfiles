@@ -27,6 +27,20 @@ vim.pack.add({
 -- Theme
 require('vesper').setup({
   italics = { comments = false, keywords = false, functions = false, strings = false, variables = false },
+  -- bluish background; vesper's own #101010 background becomes the accent for
+  -- the colorcolumn, current line, gutter, statusline and cmdline (overrides
+  -- replace whole groups, so the fgs are vesper's fgLineNr, white and fg)
+  palette_overrides = { bg = '#12141a' },
+  overrides = {
+    ColorColumn = { bg = '#101010' },
+    CursorLine = { bg = '#101010' },
+    LineNr = { fg = '#505050', bg = '#101010' },
+    CursorLineNr = { fg = '#ffffff', bg = '#101010' },
+    SignColumn = { bg = '#101010' },
+    StatusLine = { fg = '#cccccc', bg = '#101010' },
+    MsgArea = { fg = '#cccccc', bg = '#101010' },
+    ModeMsg = { fg = '#cccccc' }, -- vesper links this to Normal, whose bg would box "-- INSERT --"
+  },
 })
 vim.cmd.colorscheme('vesper')
 
