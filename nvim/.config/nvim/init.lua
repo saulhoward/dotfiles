@@ -20,6 +20,7 @@ vim.api.nvim_create_autocmd('PackChanged', {
 
 vim.pack.add({
   'https://github.com/datsfilipe/vesper.nvim',
+  'https://github.com/ibhagwan/fzf-lua',
   'https://github.com/neovim/nvim-lspconfig',
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
 })
@@ -61,3 +62,11 @@ vim.api.nvim_create_autocmd('FileType', {
 
 -- LSP: server configs come from nvim-lspconfig; the servers themselves from the nix flake
 vim.lsp.enable({ 'gopls', 'pyright', 'ts_ls', 'zls' })
+
+-- Fuzzy finding (fzf binary comes from the nix flake)
+require('fzf-lua').setup({})
+vim.keymap.set('n', '<leader>f', '<cmd>FzfLua files<cr>')
+vim.keymap.set('n', '<leader>g', '<cmd>FzfLua live_grep<cr>')
+vim.keymap.set('n', '<leader>b', '<cmd>FzfLua buffers<cr>')
+vim.keymap.set('n', '<leader>h', '<cmd>FzfLua helptags<cr>')
+vim.keymap.set('n', '<leader>/', '<cmd>FzfLua resume<cr>')
