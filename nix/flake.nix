@@ -26,6 +26,12 @@
             neovim
             tree-sitter
 
+            # language servers (enabled in nvim/init.lua)
+            gopls
+            pyright
+            typescript-language-server
+            zls
+
             # git
             difftastic
             lazygit

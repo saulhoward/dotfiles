@@ -20,6 +20,7 @@ vim.api.nvim_create_autocmd('PackChanged', {
 
 vim.pack.add({
   'https://github.com/datsfilipe/vesper.nvim',
+  'https://github.com/neovim/nvim-lspconfig',
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
 })
 
@@ -43,3 +44,6 @@ vim.api.nvim_create_autocmd('FileType', {
     end
   end,
 })
+
+-- LSP: server configs come from nvim-lspconfig; the servers themselves from the nix flake
+vim.lsp.enable({ 'gopls', 'pyright', 'ts_ls', 'zls' })
