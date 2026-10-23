@@ -39,6 +39,7 @@
             go
             nodejs
             uv
+            zig
           ]
           # GNU coreutils as g-prefixed commands (gls etc.), leaving macOS's BSD ones alone
           ++ pkgs.lib.optional pkgs.stdenv.hostPlatform.isDarwin coreutils-prefixed;
