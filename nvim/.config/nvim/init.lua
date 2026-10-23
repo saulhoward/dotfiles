@@ -63,6 +63,15 @@ vim.api.nvim_create_autocmd('FileType', {
 
 -- LSP: server configs come from nvim-lspconfig; the servers themselves from the nix flake
 vim.lsp.enable({ 'gopls', 'pyright', 'ts_ls', 'zls' })
+-- gd jumps to the LSP definition when the server supports it, otherwise vim's builtin gd
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client and client:supports_method('textDocument/definition') then
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = ev.buf })
+    end
+  end,
+})
 
 -- Fuzzy finding (fzf binary comes from the nix flake)
 require('fzf-lua').setup({})
