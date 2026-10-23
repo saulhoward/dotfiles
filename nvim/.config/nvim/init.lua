@@ -41,6 +41,7 @@ require('vesper').setup({
     StatusLine = { fg = '#cccccc', bg = '#101010' },
     MsgArea = { fg = '#cccccc', bg = '#101010' },
     ModeMsg = { fg = '#cccccc' }, -- vesper links this to Normal, whose bg would box "-- INSERT --"
+    Visual = { bg = '#2c3240' }, -- vesper mixes its bg 70% towards white (#656565), washing out text
   },
 })
 vim.cmd.colorscheme('vesper')
