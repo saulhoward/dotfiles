@@ -38,6 +38,9 @@
             mergiraf
 
             # utils
+            fd
+            fzf
+            ripgrep
             tree
             wget
 
