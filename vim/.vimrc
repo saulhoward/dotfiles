@@ -62,11 +62,67 @@ nnoremap <C-p> :bprevious<CR>
 nnoremap - :put=''<CR>
 nnoremap + :put!=''<CR>
 
-" reformat paragraph / selection
-nnoremap Q gwap
-xnoremap Q gw
-
 nnoremap Y y$
+
+" == on a comment reflows just that comment to 80 columns; on code it
+" reindents as usual (prose files override this below)
+function! s:LineComment() abort
+  " the run of lines starting with the line-comment leader, e.g. # or //
+  let leader = matchstr(&commentstring, '^\s*\zs\S\+\ze\s*%s')
+  let pat = '^\s*\V' . escape(leader, '\') . '\m\%(\s\|$\)'
+  if empty(leader) || getline('.') !~# pat | return [] | endif
+  let [first, last] = [line('.'), line('.')]
+  while first > 1 && getline(first - 1) =~# pat | let first -= 1 | endwhile
+  while last < line('$') && getline(last + 1) =~# pat | let last += 1 | endwhile
+  return [first, last]
+endfunction
+function! s:BlockComment() abort
+  " the lines of the /* ... */-style comment around the cursor, using the
+  " start/end markers from 'comments' (O-flagged ones are list bullets)
+  let [cur, view, start] = [line('.'), winsaveview(), '']
+  for part in split(&comments, ',')
+    let [flags, str] = matchlist(part, '^\([^:]*\):\(.*\)$')[1:2]
+    if flags =~# 's' && flags !~# 'O'
+      let start = str
+    elseif flags =~# 'e' && !empty(start)
+      call cursor(cur, col('$'))
+      let [sl, sc] = searchpos('\V' . escape(start, '\'), 'bcnW')
+      if sl
+        call cursor(sl, sc + len(start))
+        let el = searchpos('\V' . escape(str, '\'), 'cnW')[0]
+        call winrestview(view)
+        if el >= cur | return [sl, el] | endif
+      endif
+      call winrestview(view)
+      let start = ''
+    endif
+  endfor
+  return []
+endfunction
+function! s:Reflow() abort
+  let range = s:LineComment()
+  if empty(range) | let range = s:BlockComment() | endif
+  if empty(range)
+    execute 'normal! ' . v:count1 . '=='
+    return
+  endif
+  let tw = &l:textwidth
+  if !tw | setlocal textwidth=80 | endif
+  execute 'normal! ' . range[0] . 'Ggw' . range[1] . 'G'
+  let &l:textwidth = tw
+endfunction
+nnoremap <silent> == <Cmd>call <SID>Reflow()<CR>
+
+" prose settings live in ~/.vim/prose.vimrc so Obsidian can share them; apply
+" them to the current buffer only
+function! s:Prose() abort
+  let file = expand('~/.vim/prose.vimrc')
+  if !filereadable(file) | return | endif
+  for line in readfile(file)
+    if line =~# '^\s*\%("\|$\)' | continue | endif
+    execute substitute(line, '^\s*\a*map\zs\s', ' <buffer> ', '')
+  endfor
+endfunction
 
 " toggles
 nnoremap <leader>tl :set list! list?<CR>
@@ -96,7 +152,7 @@ augroup vimrc
   autocmd FocusGained,BufEnter,CursorHold * silent! checktime
   " prose
   autocmd BufRead,BufNewFile *.fountain setfiletype fountain
-  autocmd FileType markdown,text,fountain setlocal wrap textwidth=80
+  autocmd FileType markdown,text,fountain setlocal wrap | call s:Prose()
   " help: Enter follows a link, Backspace goes back
   autocmd FileType help nnoremap <buffer> <CR> <C-]>
   autocmd FileType help nnoremap <buffer> <BS> <C-t>

@@ -56,7 +56,12 @@ end
 vim.api.nvim_create_autocmd('FileType', {
   callback = function(ev)
     if pcall(vim.treesitter.start, ev.buf) then
-      vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      -- only languages with indent queries; for the rest (e.g. nvim's bundled
+      -- c and lua parsers) it would indent everything to column 0
+      local lang = vim.treesitter.language.get_lang(vim.bo[ev.buf].filetype)
+      if lang and vim.treesitter.query.get(lang, 'indents') then
+        vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end
     end
   end,
 })

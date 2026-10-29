@@ -11,7 +11,9 @@ and config is symlinked into `~` with [GNU Stow](https://www.gnu.org/software/st
 | `direnv`  | direnv with nix-direnv (`use flake` in `.envrc`)                  |
 | `ghostty` | Ghostty terminal config                                           |
 | `zed`     | Zed editor config                                                 |
+| `codex`   | Codex global instructions (`~/.codex/AGENTS.md`)                  |
 | `nix/`    | not a stow package: the flake listing every tool to install       |
+| `obsidian/` | not a stow package: Obsidian's vimrc, symlinked into the vault  |
 
 ## Setup
 
@@ -36,7 +38,7 @@ and config is symlinked into `~` with [GNU Stow](https://www.gnu.org/software/st
 
    ```sh
    cd ~/dotfiles
-   stow zsh vim nvim direnv ghostty zed
+   stow zsh vim nvim direnv ghostty zed codex
    ```
 
 4. Set up the git filter that keeps private Zed settings out of the repo (see below):
@@ -49,7 +51,22 @@ and config is symlinked into `~` with [GNU Stow](https://www.gnu.org/software/st
 
 5. Open a new shell. nvim installs its plugins the first time it starts.
 
-Over ssh on a machine you don't want to set up, copying `~/.vimrc` on its own is enough.
+Over ssh on a machine you don't want to set up, copying `~/.vimrc` on its own is enough
+(add `~/.vim/prose.vimrc` for the markdown wrapping settings).
+
+### Obsidian
+
+Obsidian's vim mode ([vimrc support plugin](https://github.com/esm7/obsidian-vimrc-support))
+can only read files inside the vault, so link the vimrc and the prose settings it shares with
+vim into the vault's `.local` folder, which isn't synced:
+
+```sh
+ln -s ~/dotfiles/obsidian/.obsidian.vimrc ~/sync/orac/.local/.obsidian.vimrc
+ln -s ~/dotfiles/vim/.vim/prose.vimrc ~/sync/orac/.local/prose.vimrc
+```
+
+Then set the plugin's "Vimrc file name" to `.local/.obsidian.vimrc`. Obsidian only understands
+plain `map`/`set` lines, so keep `prose.vimrc` to those.
 
 ## Day to day
 
