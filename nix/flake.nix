@@ -8,7 +8,12 @@
   outputs = { nixpkgs, ... }:
     let
       systems = [ "aarch64-darwin" "x86_64-darwin" "aarch64-linux" "x86_64-linux" ];
-      forAll = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
+      # unfree packages must be allowed by name
+      unfree = [ "1password-cli" ];
+      forAll = f: nixpkgs.lib.genAttrs systems (system: f (import nixpkgs {
+        inherit system;
+        config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) unfree;
+      }));
     in {
       packages = forAll (pkgs: {
         default = pkgs.buildEnv {
@@ -37,7 +42,11 @@
             lazygit
             mergiraf
 
+            # ai
+            pi-coding-agent
+
             # utils
+            _1password-cli
             fd
             fzf
             ripgrep
