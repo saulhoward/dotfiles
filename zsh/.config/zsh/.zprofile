@@ -37,3 +37,8 @@ path=(
     $NPM_CONFIG_PREFIX/bin
 )
 path=($^path(N-/))  # drop entries that don't exist on this machine
+
+# rex
+if [ -n "$REX_BIN_DIR" ]; then
+    export PATH="$REX_BIN_DIR:$PATH"
+fi
