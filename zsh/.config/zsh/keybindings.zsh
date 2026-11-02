@@ -1,6 +1,19 @@
 bindkey -v
 KEYTIMEOUT=1
-bindkey '^R' history-incremental-search-backward
+# Ctrl-R searches shared history, then restores the navigation filter.
+_search_shared_history() {
+  local was_local=0
+  [[ $ZLE_STATE == *localhistory* ]] && was_local=1
+  zle set-local-history -n 0
+  {
+    zle .history-incremental-search-backward
+  } always {
+    zle set-local-history -n "$was_local"
+  }
+}
+zle -N search-shared-history _search_shared_history
+bindkey '^R' search-shared-history
+bindkey -M vicmd '^R' search-shared-history
 bindkey '^H' backward-kill-word
 bindkey '^l' autosuggest-accept
 bindkey -v '^?' backward-delete-char
@@ -15,6 +28,10 @@ bindkey '^[[B' down-line-or-beginning-search
 bindkey '^[OB' down-line-or-beginning-search
 bindkey -M vicmd 'k' up-line-or-beginning-search
 bindkey -M vicmd 'j' down-line-or-beginning-search
+
+# Ctrl-X, then H toggles imported history for navigation until the next prompt.
+bindkey '^Xh' set-local-history
+bindkey -M vicmd '^Xh' set-local-history
 
 # Incremental history search in normal mode too
 bindkey -M vicmd '/' history-incremental-search-backward
@@ -45,6 +62,7 @@ function zle-keymap-select {
 }
 zle -N zle-keymap-select
 zle-line-init() {
+    zle set-local-history -n 1 # skip commands imported from other running shells
     zle -K viins # initiate `vi insert` as keymap
     print -n '\e[5 q'
 }
