@@ -49,6 +49,7 @@
             _1password-cli
             fd
             fzf
+            leaf-markdown-viewer
             ripgrep
             tree
             wget
