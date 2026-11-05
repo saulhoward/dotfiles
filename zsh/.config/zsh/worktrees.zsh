@@ -146,6 +146,52 @@ gwtcd() {
     builtin cd -- "$target"
 }
 
+# Run in a subshell so selecting a worktree never changes the caller's directory.
+gwtrex() (
+    if (( $# > 1 )); then
+        print -u2 'usage: gwtrex [branch]'
+        return 1
+    fi
+    if (( ! $+commands[rex] )); then
+        print -u2 'gwtrex: rex is not installed or is not on PATH.'
+        return 1
+    fi
+    local REPLY common session_id
+    _gwt_common || return
+    common=$REPLY
+    gwtcd "$@" || return
+    # Lua handles structured responses without requiring jq or interpolating paths
+    # into code. Failed lookups must not be mistaken for a missing session.
+    session_id=$(command rex do -e '
+        local id
+        local label = rex.args.label
+        for _, session in ipairs(rex.call("session.list").sessions or {}) do
+            if session.label == label then
+                if id then error("Multiple Rex sessions named " .. label) end
+                id = session.session_id
+            end
+        end
+        if not id then
+            id = rex.call("session.create", {
+                label = label,
+                initial_windows = {{layout = {block = {
+                    flavor = "com.superlogical.terminal.shell",
+                    options = {cwd = rex.args.cwd}
+                }}}}
+            }).session_id
+        end
+        return id
+    ' "label=gwt:${common:h:t}:${PWD:t}" "cwd=$PWD" --json) || return
+    # Rex prints a returned string as JSON. Session IDs contain no JSON escapes.
+    session_id=${session_id#\"}
+    session_id=${session_id%\"}
+    if [[ $session_id != session:* || $session_id == *[[:space:]\"\\]* ]]; then
+        print -u2 'gwtrex: Rex returned an invalid session ID.'
+        return 1
+    fi
+    command rex do session.select "session_id=$session_id"
+)
+
 gwtrm() {
     if (( $# > 1 )); then
         print -u2 'usage: gwtrm [branch]'

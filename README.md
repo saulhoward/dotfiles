@@ -106,6 +106,7 @@ my-project/
 | `gwtnew <branch> [base]` | Create a branch and worktree, then enter it; base defaults to `origin/HEAD` |
 | `gwtadd <branch>` | Check out an existing local branch, or create a tracking branch from `origin/<branch>` |
 | `gwtcd [branch]` | Enter a branch's worktree; no argument opens an fzf picker |
+| `gwtrex [branch]` | Switch to a worktree's Rex session, creating it if needed; no argument opens an fzf picker |
 | `gwtrm [branch]` | Remove a worktree, keeping its branch; no argument removes the current worktree |
 | `gwtprune` | Prune stale worktree metadata |
 
@@ -113,6 +114,7 @@ my-project/
 gclone git@github.com:org/my-project.git
 git fetch origin
 gwtnew feature/login
+gwtrex feature/login
 gwtcd main
 gwtrm feature/login
 ```
@@ -123,6 +125,12 @@ Only cloning fetches automatically: run `git fetch origin` before `gwtnew` or
 `gwtadd` when you want fresh remote state. New feature branches do not track the
 base branch. `gwtrm` never forces removal or deletes branches; on failure it
 restores your previous directory. Existing ordinary checkouts are not converted.
+`gwtrex` requires the `rex` CLI on PATH. It reuses the session labelled
+`gwt:<project>:<worktree-directory>`, or creates one in the worktree directory, then
+selects it in the Rex app without changing your current shell's directory. Duplicate
+matching labels are rejected. Rex uses `REX_CLIENT` to target your current client;
+when outside Rex, it can automatically select the sole connected app client. Set
+`REX_CLIENT` explicitly if multiple app clients are connected.
 An empty remote cannot supply an initial worktree; a failed clone/setup leaves
 its directory in place for inspection.
 

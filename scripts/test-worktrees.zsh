@@ -72,6 +72,53 @@ if (( $+commands[fzf] )); then
     [[ $PWD == "$root/feature-login" ]]
 fi
 gwtcd trunk
+
+# Stub Rex: verify its arguments without opening real sessions during tests.
+command mkdir "$tmp/bin"
+command cat > "$tmp/bin/rex" <<'SH'
+#!/bin/sh
+if [ "$1" = do ] && [ "$2" = -e ]; then
+    printf '%s' "$3" > "$REX_TEST_LOG.lua"
+    shift 3
+    printf '%s\n' "$@" > "$REX_TEST_LOG"
+    [ "${REX_TEST_EXIT:-0}" = 0 ] || exit "$REX_TEST_EXIT"
+    printf '%s\n' '"session:test-id"'
+else
+    printf '%s\n' "$@" > "$REX_TEST_LOG.select"
+    exit "${REX_TEST_SELECT_EXIT:-0}"
+fi
+SH
+command chmod +x "$tmp/bin/rex"
+export PATH="$tmp/bin:$PATH" REX_TEST_LOG="$tmp/rex-args"
+original=$PWD
+gwtrex feature/login
+[[ $PWD == "$original" ]]
+args=("${(@f)$(<"$REX_TEST_LOG")}")
+[[ ${#args} == 3 && $args[1] == 'label=gwt:project with spaces:feature-login' ]]
+[[ $args[2] == "cwd=$root/feature-login" && $args[3] == --json ]]
+select_args=("${(@f)$(<"$REX_TEST_LOG.select")}")
+[[ ${#select_args} == 3 && $select_args[1] == do && $select_args[2] == session.select ]]
+[[ $select_args[3] == session_id=session:test-id ]]
+if (( $+commands[fzf] )); then
+    FZF_DEFAULT_OPTS='--filter=feature/login' gwtrex
+    [[ $PWD == "$original" ]]
+    args=("${(@f)$(<"$REX_TEST_LOG")}")
+    [[ $args[2] == "cwd=$root/feature-login" ]]
+fi
+command rm "$REX_TEST_LOG" "$REX_TEST_LOG.select"
+if gwtrex nonexistent; then
+    print -u2 'missing Rex worktree was accepted'; exit 1
+fi
+[[ ! -e $REX_TEST_LOG && $PWD == "$original" ]]
+if REX_TEST_EXIT=7 gwtrex feature/login; then
+    print -u2 'Rex failure was not propagated'; exit 1
+fi
+[[ $PWD == "$original" && ! -e "$REX_TEST_LOG.select" ]]
+if REX_TEST_SELECT_EXIT=8 gwtrex feature/login; then
+    print -u2 'Rex selection failure was not propagated'; exit 1
+fi
+[[ $PWD == "$original" ]]
+
 gwtrm feature/login
 [[ ! -d "$root/feature-login" ]]
 command git show-ref --verify --quiet refs/heads/feature/login
