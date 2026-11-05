@@ -12,6 +12,7 @@ and config is symlinked into `~` with [GNU Stow](https://www.gnu.org/software/st
 | `ghostty` | Ghostty terminal config                                           |
 | `zed`     | Zed editor config                                                 |
 | `codex`   | Codex global instructions (`~/.codex/AGENTS.md`)                  |
+| `pi`      | Pi preferences and package list (`~/.pi/agent/settings.json`)    |
 | `nix/`    | not a stow package: the flake listing every tool to install       |
 | `obsidian/` | not a stow package: Obsidian's vimrc, symlinked into the vault  |
 
@@ -39,6 +40,7 @@ and config is symlinked into `~` with [GNU Stow](https://www.gnu.org/software/st
    ```sh
    cd ~/dotfiles
    stow zsh vim nvim direnv ghostty zed codex
+   stow --no-folding pi
    ```
 
 4. Set up the git filter that keeps private Zed settings out of the repo (see below):
@@ -84,5 +86,20 @@ plain `map`/`set` lines, so keep `prose.vimrc` to those.
   (`scripts/zed-settings-filter`) strips them when you commit, saves them to
   `~/.config/zed/settings.private.jsonc`, and puts them back on checkout. Edit settings in Zed as
   usual. Add more keys to `PRIVATE_KEYS` in the script.
+
+### Pi settings
+
+Only `~/.pi/agent/settings.json` is synced. Before the first `stow --no-folding pi`,
+back up any existing settings file outside the repo and move it out of the way.
+`--no-folding` keeps Pi's directories local and links only the settings file.
+
+Git ignores everything else under the `pi/` package by default. Keep authentication,
+MCP configuration, sessions, plugin state, installs, and caches local; do not copy
+`~/.pi` wholesale into this public repo. New machines need their own provider and
+plugin logins.
+
+Pi writes preference and package changes back to the linked settings file. Review
+its diff before committing: the current file has no credentials, but ignore rules
+do not protect against secrets added to an allowed file.
 
 On macOS, Homebrew is only used for GUI apps that Nix doesn't package well.

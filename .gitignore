@@ -20,3 +20,10 @@ zed/.config/zed/settings_backup.json
 /node_modules/
 /package.json
 /package-lock.json
+# Pi: allow only the reviewed settings file; never sync the entire agent directory.
+/pi/*
+!/pi/.pi/
+/pi/.pi/*
+!/pi/.pi/agent/
+/pi/.pi/agent/*
+!/pi/.pi/agent/settings.json

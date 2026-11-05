@@ -1,0 +1,23 @@
+{
+  "lastChangelogVersion": "1.5.0",
+  "defaultProvider": "openai",
+  "defaultModel": "gpt-6.1-sol",
+  "theme": "system",
+  "packages": [
+    "npm:@datadog/pi-plugin",
+    "npm:@feniix/pi-notion",
+    "npm:@alasano/pi-linear",
+    "npm:pi-figma-remote-auth",
+    "npm:pi-vim-editor"
+  ],
+  "extensionChangelogVersions": {
+    "{\"source\":\"npm:@feniix/pi-notion\",\"scope\":\"user\"}": "4.0.2"
+  },
+  "hideThinkingBlock": false,
+  "showHardwareCursor": true,
+  "vimEditor": {
+    "cursorShape": true,
+    "indicator": "none",
+    "clipboard": "unnamedplus"
+  }
+}
