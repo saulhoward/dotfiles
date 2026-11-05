@@ -87,6 +87,47 @@ plain `map`/`set` lines, so keep `prose.vimrc` to those.
   `~/.config/zed/settings.private.jsonc`, and puts them back on checkout. Edit settings in Zed as
   usual. Add more keys to `PRIVATE_KEYS` in the script.
 
+### Git worktrees
+
+The zsh functions in `zsh/.config/zsh/worktrees.zsh` use sibling worktrees backed
+by a hidden bare repo:
+
+```text
+my-project/
+├── .git/           # bare repo
+├── main/           # remote's default branch (may have another name)
+└── feature-login/  # branch feature/login
+```
+
+| Command | Behavior |
+|---------|----------|
+| `gclone <url> [directory]` | Set up this layout and enter the default-branch worktree |
+| `gwt` | List worktrees |
+| `gwtnew <branch> [base]` | Create a branch and worktree, then enter it; base defaults to `origin/HEAD` |
+| `gwtadd <branch>` | Check out an existing local branch, or create a tracking branch from `origin/<branch>` |
+| `gwtcd [branch]` | Enter a branch's worktree; no argument opens an fzf picker |
+| `gwtrm [branch]` | Remove a worktree, keeping its branch; no argument removes the current worktree |
+| `gwtprune` | Prune stale worktree metadata |
+
+```sh
+gclone git@github.com:org/my-project.git
+git fetch origin
+gwtnew feature/login
+gwtcd main
+gwtrm feature/login
+```
+
+Commands work from the parent directory or anywhere inside its worktrees. Branch
+slashes become hyphens in directory names; existing paths are never reused.
+Only cloning fetches automatically: run `git fetch origin` before `gwtnew` or
+`gwtadd` when you want fresh remote state. New feature branches do not track the
+base branch. `gwtrm` never forces removal or deletes branches; on failure it
+restores your previous directory. Existing ordinary checkouts are not converted.
+An empty remote cannot supply an initial worktree; a failed clone/setup leaves
+its directory in place for inspection.
+
+Run the local integration tests with `zsh -f scripts/test-worktrees.zsh`.
+
 ### Pi settings
 
 Only `~/.pi/agent/settings.json` is synced. Before the first `stow --no-folding pi`,

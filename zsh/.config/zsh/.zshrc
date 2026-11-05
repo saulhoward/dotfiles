@@ -3,7 +3,7 @@
 
 # Order matters: completion before tools (which register completions),
 # plugins after everything that defines widgets.
-for file in options prompt completion keybindings aliases tools; do
+for file in options prompt completion keybindings aliases worktrees tools; do
     source "$ZDOTDIR/$file.zsh"
 done
 case $OSTYPE in
