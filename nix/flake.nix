@@ -39,6 +39,7 @@
 
             # git
             difftastic
+            gh
             lazygit
             mergiraf
 
