@@ -119,6 +119,67 @@ if REX_TEST_SELECT_EXIT=8 gwtrex feature/login; then
 fi
 [[ $PWD == "$original" ]]
 
+# Combined commands enter the worktree and invoke Rex with that exact branch.
+assert_rex_target() {
+    local target=$1
+    local -a args select_args
+    [[ $PWD == "$target" ]]
+    args=("${(@f)$(<"$REX_TEST_LOG")}")
+    [[ $args[1] == "label=gwt:project with spaces:${target:t}" ]]
+    [[ $args[2] == "cwd=$target" ]]
+    select_args=("${(@f)$(<"$REX_TEST_LOG.select")}")
+    [[ $select_args[1] == do && $select_args[2] == session.select ]]
+    [[ $select_args[3] == session_id=session:test-id ]]
+}
+
+gwtrexnew rex/default
+assert_rex_target "$root/rex-default"
+[[ $(command git rev-parse HEAD) == $(command git rev-parse origin/trunk) ]]
+gwtrexnew rex/explicit trunk
+assert_rex_target "$root/rex-explicit"
+[[ $(command git rev-parse HEAD) == $(command git rev-parse trunk) ]]
+command git branch rex/local trunk
+gwtrexadd rex/local
+assert_rex_target "$root/rex-local"
+command git -C "$tmp/upstream" branch rex/remote
+command git fetch origin
+gwtrexadd rex/remote
+assert_rex_target "$root/rex-remote"
+[[ $(command git rev-parse --abbrev-ref '@{upstream}') == origin/rex/remote ]]
+
+# Worktree failures (including bad arguments) must not invoke Rex.
+command rm "$REX_TEST_LOG" "$REX_TEST_LOG.select"
+original=$PWD
+if gwtrexadd nonexistent; then
+    print -u2 'missing branch was accepted by gwtrexadd'; exit 1
+fi
+if gwtrexnew feature-login; then
+    print -u2 'collision was accepted by gwtrexnew'; exit 1
+fi
+if gwtrexadd; then
+    print -u2 'gwtrexadd accepted missing arguments'; exit 1
+fi
+if gwtrexnew; then
+    print -u2 'gwtrexnew accepted missing arguments'; exit 1
+fi
+[[ ! -e $REX_TEST_LOG && ! -e "$REX_TEST_LOG.select" && $PWD == "$original" ]]
+
+# Rex failures propagate, but preserve the successfully created worktree.
+if REX_TEST_EXIT=7 gwtrexnew rex/failure; then
+    print -u2 'gwtrexnew swallowed Rex failure'; exit 1
+else
+    [[ $? == 7 ]]
+fi
+[[ $PWD == "$root/rex-failure" && -f .git ]]
+command git branch rex/select-failure trunk
+if REX_TEST_SELECT_EXIT=8 gwtrexadd rex/select-failure; then
+    print -u2 'gwtrexadd swallowed Rex selection failure'; exit 1
+else
+    [[ $? == 8 ]]
+fi
+[[ $PWD == "$root/rex-select-failure" && -f .git ]]
+gwtcd trunk
+
 gwtrm feature/login
 [[ ! -d "$root/feature-login" ]]
 command git show-ref --verify --quiet refs/heads/feature/login

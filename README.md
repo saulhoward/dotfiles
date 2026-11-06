@@ -107,6 +107,8 @@ my-project/
 | `gwtadd <branch>` | Check out an existing local branch, or create a tracking branch from `origin/<branch>` |
 | `gwtcd [branch]` | Enter a branch's worktree; no argument opens an fzf picker |
 | `gwtrex [branch]` | Switch to a worktree's Rex session, creating it if needed; no argument opens an fzf picker |
+| `gwtrexadd <branch>` | Like `gwtadd`, then create or switch to the worktree's Rex session |
+| `gwtrexnew <branch> [base]` | Like `gwtnew`, then create or switch to the worktree's Rex session |
 | `gwtrm [branch]` | Remove a worktree, keeping its branch; no argument removes the current worktree |
 | `gwtprune` | Prune stale worktree metadata |
 
@@ -131,6 +133,13 @@ selects it in the Rex app without changing your current shell's directory. Dupli
 matching labels are rejected. Rex uses `REX_CLIENT` to target your current client;
 when outside Rex, it can automatically select the sole connected app client. Set
 `REX_CLIENT` explicitly if multiple app clients are connected.
+
+`gwtrexadd` and `gwtrexnew` also change your shell's directory, just like `gwtadd`
+and `gwtnew`. For example, `gwtrexnew feature/login` creates the branch and worktree,
+enters it, and selects its Rex session. If the Git step fails, Rex is not invoked.
+If Rex fails, the new worktree and branch are kept and your shell stays there;
+retry with `gwtrex <branch>` after fixing the Rex connection.
+
 An empty remote cannot supply an initial worktree; a failed clone/setup leaves
 its directory in place for inspection.
 

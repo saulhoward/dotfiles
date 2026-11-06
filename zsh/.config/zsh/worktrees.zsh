@@ -192,6 +192,17 @@ gwtrex() (
     command rex do session.select "session_id=$session_id"
 )
 
+# Keep gwtadd/gwtnew's arguments and directory-changing behavior, then open Rex.
+gwtrexadd() {
+    gwtadd "$@" || return
+    gwtrex "$1"
+}
+
+gwtrexnew() {
+    gwtnew "$@" || return
+    gwtrex "$1"
+}
+
 gwtrm() {
     if (( $# > 1 )); then
         print -u2 'usage: gwtrm [branch]'
