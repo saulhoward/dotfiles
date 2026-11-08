@@ -119,11 +119,12 @@ if REX_TEST_SELECT_EXIT=8 gwtrex feature/login; then
 fi
 [[ $PWD == "$original" ]]
 
-# Combined commands enter the worktree and invoke Rex with that exact branch.
+# Combined commands preserve the caller's directory and target the new worktree.
+original=$PWD
 assert_rex_target() {
     local target=$1
     local -a args select_args
-    [[ $PWD == "$target" ]]
+    [[ $PWD == "$original" ]]
     args=("${(@f)$(<"$REX_TEST_LOG")}")
     [[ $args[1] == "label=gwt:project with spaces:${target:t}" ]]
     [[ $args[2] == "cwd=$target" ]]
@@ -134,10 +135,10 @@ assert_rex_target() {
 
 gwtrexnew rex/default
 assert_rex_target "$root/rex-default"
-[[ $(command git rev-parse HEAD) == $(command git rev-parse origin/trunk) ]]
+[[ $(command git -C "$root/rex-default" rev-parse HEAD) == $(command git rev-parse origin/trunk) ]]
 gwtrexnew rex/explicit trunk
 assert_rex_target "$root/rex-explicit"
-[[ $(command git rev-parse HEAD) == $(command git rev-parse trunk) ]]
+[[ $(command git -C "$root/rex-explicit" rev-parse HEAD) == $(command git rev-parse trunk) ]]
 command git branch rex/local trunk
 gwtrexadd rex/local
 assert_rex_target "$root/rex-local"
@@ -145,7 +146,7 @@ command git -C "$tmp/upstream" branch rex/remote
 command git fetch origin
 gwtrexadd rex/remote
 assert_rex_target "$root/rex-remote"
-[[ $(command git rev-parse --abbrev-ref '@{upstream}') == origin/rex/remote ]]
+[[ $(command git -C "$root/rex-remote" rev-parse --abbrev-ref '@{upstream}') == origin/rex/remote ]]
 
 # Worktree failures (including bad arguments) must not invoke Rex.
 command rm "$REX_TEST_LOG" "$REX_TEST_LOG.select"
@@ -170,14 +171,14 @@ if REX_TEST_EXIT=7 gwtrexnew rex/failure; then
 else
     [[ $? == 7 ]]
 fi
-[[ $PWD == "$root/rex-failure" && -f .git ]]
+[[ $PWD == "$original" && -f "$root/rex-failure/.git" ]]
 command git branch rex/select-failure trunk
 if REX_TEST_SELECT_EXIT=8 gwtrexadd rex/select-failure; then
     print -u2 'gwtrexadd swallowed Rex selection failure'; exit 1
 else
     [[ $? == 8 ]]
 fi
-[[ $PWD == "$root/rex-select-failure" && -f .git ]]
+[[ $PWD == "$original" && -f "$root/rex-select-failure/.git" ]]
 gwtcd trunk
 
 gwtrm feature/login

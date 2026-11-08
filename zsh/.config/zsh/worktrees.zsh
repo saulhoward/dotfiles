@@ -192,16 +192,16 @@ gwtrex() (
     command rex do session.select "session_id=$session_id"
 )
 
-# Keep gwtadd/gwtnew's arguments and directory-changing behavior, then open Rex.
-gwtrexadd() {
+# Create the worktree and open Rex without changing the caller's directory.
+gwtrexadd() (
     gwtadd "$@" || return
     gwtrex "$1"
-}
+)
 
-gwtrexnew() {
+gwtrexnew() (
     gwtnew "$@" || return
     gwtrex "$1"
-}
+)
 
 gwtrm() {
     if (( $# > 1 )); then
