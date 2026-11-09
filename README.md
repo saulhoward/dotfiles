@@ -138,11 +138,12 @@ matching labels are rejected. Rex uses `REX_CLIENT` to target your current clien
 when outside Rex, it can automatically select the sole connected app client. Set
 `REX_CLIENT` explicitly if multiple app clients are connected.
 
-`gwtrexadd` and `gwtrexnew` also change your shell's directory, just like `gwtadd`
-and `gwtnew`. For example, `gwtrexnew feature/login` creates the branch and worktree,
-enters it, and selects its Rex session. If the Git step fails, Rex is not invoked.
-If Rex fails, the new worktree and branch are kept and your shell stays there;
-retry with `gwtrex <branch>` after fixing the Rex connection.
+`gwtrexadd` and `gwtrexnew` create worktrees like `gwtadd` and `gwtnew`, but leave
+your current shell's directory unchanged. For example, `gwtrexnew feature/login`
+creates the branch and worktree, then selects its Rex session. If the Git step
+fails, Rex is not invoked. If Rex fails, the new worktree and branch are kept;
+retry with `gwtrex <branch>` after fixing the Rex connection. Your shell stays in
+its original directory in either case.
 
 An empty remote cannot supply an initial worktree; a failed clone/setup leaves
 its directory in place for inspection.
