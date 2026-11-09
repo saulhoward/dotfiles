@@ -24,6 +24,8 @@ nmap <C-i> :forward<CR>
 
 " Make o and O respect context
 exmap blankBelow obcommand obsidian-editor-shortcuts:insertLineBelow
-exmap blankAbove obcommand obsidian-editor-shortcuts:insertLineAbove
+" Requires "Support JavaScript commands" in Vimrc Support settings.
+" Continue bullet lists even on the first line or after a blank line.
+exmap blankAbove jscommand { const {line} = editor.getCursor(); const bullet = editor.getLine(line).match(/^(\s*)- /); if (bullet) { const prefix = bullet[1] + '- '; editor.replaceRange(prefix + '\n', {line, ch: 0}); editor.setCursor({line, ch: prefix.length}); } else { view.app.commands.executeCommandById('obsidian-editor-shortcuts:insertLineAbove'); } }
 nmap o :blankBelow<CR>i
 nmap O :blankAbove<CR>i

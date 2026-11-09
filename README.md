@@ -67,8 +67,12 @@ ln -s ~/dotfiles/obsidian/.obsidian.vimrc ~/sync/orac/.local/.obsidian.vimrc
 ln -s ~/dotfiles/vim/.vim/prose.vimrc ~/sync/orac/.local/prose.vimrc
 ```
 
-Then set the plugin's "Vimrc file name" to `.local/.obsidian.vimrc`. Obsidian only understands
-plain `map`/`set` lines, so keep `prose.vimrc` to those.
+Then set the plugin's "Vimrc file name" to `.local/.obsidian.vimrc` and enable
+"Support JavaScript commands" in Vimrc Support. The `O` mapping uses a JavaScript command
+to continue `- ` bullet lists above the current line, preserving indentation (including
+at the start of a note or after a blank line). Other lines use Editor Shortcuts as before.
+Obsidian only understands plain `map`/`set` lines in the shared prose settings, so keep
+`prose.vimrc` to those.
 
 ## Day to day
 
