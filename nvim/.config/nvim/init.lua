@@ -21,6 +21,8 @@ vim.api.nvim_create_autocmd('PackChanged', {
 vim.pack.add({
   'https://github.com/datsfilipe/vesper.nvim',
   'https://github.com/ibhagwan/fzf-lua',
+  'https://github.com/lewis6991/gitsigns.nvim',
+  'https://github.com/nvim-lualine/lualine.nvim',
   'https://github.com/neovim/nvim-lspconfig',
   { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
 })
@@ -45,6 +47,15 @@ require('vesper').setup({
   },
 })
 vim.cmd.colorscheme('vesper')
+
+-- Git: show added, changed and deleted lines in the gutter.
+require('gitsigns').setup({})
+
+-- Branch review: a non-wrapping file tree and branch-relative gutter signs.
+require('git_review').setup()
+
+-- One Vesper-inspired statusline across splits.
+require('lualine').setup(require('statusline'))
 
 -- Treesitter: nvim bundles c, lua, markdown, vim and vimdoc; install the rest
 -- (building parsers needs the tree-sitter CLI)

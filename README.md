@@ -43,12 +43,16 @@ and config is symlinked into `~` with [GNU Stow](https://www.gnu.org/software/st
    stow --no-folding pi
    ```
 
-4. Set up the git filter that keeps private Zed settings out of the repo (see below):
+4. Set up the Git filters that keep private Zed and Pi settings out of the repo
+   before staging settings changes (see below):
 
    ```sh
    git config filter.zed-private.clean 'scripts/zed-settings-filter clean'
    git config filter.zed-private.smudge 'scripts/zed-settings-filter smudge'
    git config filter.zed-private.required true
+   git config filter.pi-private.clean 'scripts/pi-settings-filter clean'
+   git config filter.pi-private.smudge 'scripts/pi-settings-filter smudge'
+   git config filter.pi-private.required true
    ```
 
 5. Open a new shell. nvim installs its plugins the first time it starts.
@@ -83,6 +87,20 @@ Obsidian only understands plain `map`/`set` lines in the shared prose settings, 
 - **Global npm packages** install to `~/.local/share/npm`, because the Nix store is read-only.
 - **nvim plugins** use the built-in `vim.pack` and are pinned in `nvim/.config/nvim/nvim-pack-lock.json`.
   Run `:lua vim.pack.update()` to update them.
+- **Branch changes in nvim:** `:GitBranchChanges` opens Gitsigns' changed-file tree
+  against `master`, with an editable file pane alongside it. Use `:GitBranchChanges main`
+  (or another ref) to override the base. Includes committed and saved local changes.
+  Press `<Enter>` on a file to open it, `]f` / `[f` for the next / previous file,
+  and `g?` in the panel for help. Opens in a new tab unless starting from an empty
+  window; close the review tab with `:tabclose`. The file tree never wraps, including
+  after refreshes. Reviewed files show gutter signs against the selected base;
+  the global Gitsigns default and quickfix are unchanged. Comparisons are buffer-local,
+  so signs also change in any other window showing the same file, and remain after
+  closing the review. Lualine shows an orange `diff:<base>` label (e.g. `diff:master`)
+  whenever that buffer compares against a non-default base. Use `:Gitsigns reset_base`
+  in a file to return to index comparisons and hide the label. The default is staged
+  content (the index), not `HEAD`; unrelated newly opened files need no reset.
+  For side-by-side diffs instead, use `:Gitsigns diff master`.
 - **Machine-specific shell config** (work settings, credentials, private paths) goes in
   `~/.config/zsh/local.zsh`, which git ignores. See `local.zsh.example`. **This repo is public.**
 - **Private Zed settings:** the top-level `agent`, `agent_servers`, `language_models` and
@@ -150,6 +168,53 @@ its directory in place for inspection.
 
 Run the local integration tests with `zsh -f scripts/test-worktrees.zsh`.
 
+### Git cleanup
+
+`git cleanup` and `gcleanup` are adapted from
+[jessfraz/global-nix](https://github.com/jessfraz/global-nix), with the build-output
+policy from [jessfraz/dotfiles](https://github.com/jessfraz/dotfiles). Pinned sources
+and local adaptations are recorded in `zsh/.config/zsh/bin/UPSTREAM.md`.
+
+**Cleanup acts immediately by default.** It fetches the remote base, fast-forwards
+its local branch, then deletes the current clean, merged feature branch and its
+linked worktree, if any. It never deletes the primary clone, selected base
+worktree, shared Git database or a remote branch. On the base branch it only
+updates the base and runs Git maintenance. `gcleanup` also returns the shell to
+the primary clone (or the base worktree in a `gwt*` layout) after removal.
+
+Preview first; a plan fetches the base but does not delete files or branches:
+
+```sh
+git cleanup --plan
+# Save outside the worktree being removed, then review before executing:
+git cleanup --plan > /tmp/git-cleanup-plan.json
+gcleanup --execute /tmp/git-cleanup-plan.json
+```
+
+Dirty, locked or unmerged worktrees are refused. Recognized ignored build output
+can be removed with a linked worktree; other ignored files block its removal.
+Busy build caches are skipped. Submodule Git storage is retained in the common
+Git directory under `cleanup-submodules/`. `--force` waives only the merge check,
+not local-file protections. `--no-gc` skips Git garbage collection; `--base` and
+`--remote` override the default base and `origin`.
+
+Both ordinary clones and the bare-primary layout created by `gclone` / `gwt*`
+are supported. In a `gwt*` layout, cleanup finds the selected base's worktree in
+Git's registry, even if its directory was renamed. That worktree must exist;
+cleanup refuses to remove anything if it is missing or ambiguous. From the
+project parent, cleanup only updates the base. A dirty base is left untouched
+when removing a merged feature. Unlike `gwtrm`, cleanup also deletes the finished
+local branch after verifying it is merged.
+
+The commands use existing Git/SSH and `gh` authentication, with no credential wrapper.
+Python 3.10+, Git, `gh` (for GitHub merge evidence) and `lsof` (for build-cache
+checks) must be on PATH; Python and `lsof` are included in the Nix tools.
+
+After stowing `zsh`, open a new shell, or load just these commands in an existing
+one with `source "$ZDOTDIR/cleanup.zsh"`. No cleanup runs on shell startup.
+Run the isolated tests with
+`python3 -m unittest discover -s tests -p 'test_git_cleanup*.py'`.
+
 ### Pi settings
 
 Only `~/.pi/agent/settings.json` is synced. Before the first `stow --no-folding pi`,
@@ -161,8 +226,19 @@ MCP configuration, sessions, plugin state, installs, and caches local; do not co
 `~/.pi` wholesale into this public repo. New machines need their own provider and
 plugin logins.
 
-Pi writes preference and package changes back to the linked settings file. Review
-its diff before committing: the current file has no credentials, but ignore rules
-do not protect against secrets added to an allowed file.
+Pi writes preference and package changes back to the linked settings file. The
+Git clean/smudge mask in `scripts/pi-settings-filter` commits only the reviewed
+`PUBLIC_KEYS` allowlist. Other top-level settings, including the entire
+`slack-bridge` configuration, are saved locally to
+`~/.pi/agent/settings.private.json` with owner-only permissions and restored on
+checkout. Saved private values take precedence over any old tracked private
+blocks. The working settings retain their private values; they are absent from
+the committed blob. This is a Git filter, not a native Pi settings feature.
+
+Configure the required filter on every clone before staging settings. New keys
+stay private until reviewed and added to the allowlist. Review values within
+allowed fields too, especially package URLs; an allowed key is not proof that
+its contents are safe. Keep the private file local and back it up securely.
+Run the mask tests with `python3 -m unittest discover -s tests -p 'test_pi_settings_filter.py'`.
 
 On macOS, Homebrew is only used for GUI apps that Nix doesn't package well.

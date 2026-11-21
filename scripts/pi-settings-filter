@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""Git clean/smudge mask for Pi: sync reviewed preferences, keep other keys local."""
+
+import json
+import os
+from pathlib import Path
+import sys
+import tempfile
+
+# New settings stay private until explicitly reviewed for this public repository.
+# Values inside allowed fields still need review (for example, package URLs).
+PUBLIC_KEYS = {
+    "lastChangelogVersion",
+    "defaultProvider",
+    "defaultModel",
+    "theme",
+    "packages",
+    "extensionChangelogVersions",
+    "hideThinkingBlock",
+    "showHardwareCursor",
+    "vimEditor",
+}
+PRIVATE_FILE = Path.home() / ".pi/agent/settings.private.json"
+
+
+def read_settings(text: str) -> dict[str, object]:
+    settings = json.loads(text)
+    if not isinstance(settings, dict):
+        raise ValueError("Pi settings must be a JSON object")
+    return settings
+
+
+def save_private(settings: dict[str, object]) -> None:
+    PRIVATE_FILE.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    # Temporary files are owner-only; atomic replacement avoids partial overlays.
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", dir=PRIVATE_FILE.parent,
+            prefix=".settings-private-", delete=False,
+        ) as output:
+            temporary = Path(output.name)
+            json.dump(settings, output, indent=2)
+            output.write("\n")
+        os.replace(temporary, PRIVATE_FILE)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+
+
+def main() -> int:
+    if len(sys.argv) != 2 or sys.argv[1] not in ("clean", "smudge"):
+        print("usage: pi-settings-filter clean|smudge", file=sys.stderr)
+        return 2
+    try:
+        settings = read_settings(sys.stdin.read())
+        if sys.argv[1] == "clean":
+            private = {key: value for key, value in settings.items() if key not in PUBLIC_KEYS}
+            if private:
+                save_private(private)
+            settings = {key: value for key, value in settings.items() if key in PUBLIC_KEYS}
+        elif PRIVATE_FILE.exists():
+            private = read_settings(PRIVATE_FILE.read_text(encoding="utf-8"))
+            for key, value in private.items():
+                # Saved local values win over older tracked private blocks, so
+                # checkout followed by clean cannot erase the saved credentials.
+                if key not in PUBLIC_KEYS:
+                    settings[key] = value
+        json.dump(settings, sys.stdout, indent=2)
+        sys.stdout.write("\n")
+        return 0
+    except (OSError, ValueError) as error:
+        # Never emit settings on failure; Git's required filter blocks the operation.
+        print(f"Pi settings filter failed: {error}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

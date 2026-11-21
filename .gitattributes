@@ -1,1 +1,2 @@
 zed/.config/zed/settings.json filter=zed-private
+pi/.pi/agent/settings.json filter=pi-private

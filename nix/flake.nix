@@ -42,6 +42,8 @@
             gh
             lazygit
             mergiraf
+            python3 # git cleanup and gcleanup
+            lsof # detect active build caches before cleanup
 
             # ai
             pi-coding-agent
